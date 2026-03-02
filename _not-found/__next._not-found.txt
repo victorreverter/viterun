@@ -1,4 +1,4 @@
 1:"$Sreact.fragment"
 2:I[39756,["/viterun/_next/static/chunks/ff1a16fafef87110.js","/viterun/_next/static/chunks/d2be314c3ece3fbe.js"],"default"]
 3:I[37457,["/viterun/_next/static/chunks/ff1a16fafef87110.js","/viterun/_next/static/chunks/d2be314c3ece3fbe.js"],"default"]
-0:{"buildId":"lfNG8rqARbnnPnYDgvyho","rsc":["$","$1","c",{"children":[null,["$","$L2",null,{"parallelRouterKey":"children","template":["$","$L3",null,{}]}]]}],"loading":null,"isPartial":false}
+0:{"buildId":"UyWC89fXznkscZW44vcTs","rsc":["$","$1","c",{"children":[null,["$","$L2",null,{"parallelRouterKey":"children","template":["$","$L3",null,{}]}]]}],"loading":null,"isPartial":false}
