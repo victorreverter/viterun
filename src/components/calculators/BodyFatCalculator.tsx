@@ -4,35 +4,47 @@ import { useUserStore } from "@/store/useUserStore";
 import { Activity } from "lucide-react";
 
 export function BodyFatCalculator() {
-    const { gender, height, neck, waist, hips, updateField } = useUserStore();
+    const { gender, weight, height, neck, waist, hips, updateField } = useUserStore();
 
-    const calculateBodyFat = () => {
-        if (!height || !neck || !waist || (gender === "female" && !hips)) {
-            return "--";
-        }
+    const calculateVariables = () => {
+        let bf = "--";
+        let bmiValue = "--";
 
-        const h = Number(height);
+        const wKg = Number(weight);
+        const hCm = Number(height);
         const n = Number(neck);
         const w = Number(waist);
         const hip = Number(hips);
 
-        let bf = 0;
-
-        if (gender === "male") {
-            // U.S. Navy Method for Men (measurements in cm)
-            // 495 / (1.0324 - 0.19077 * log10(waist - neck) + 0.15456 * log10(height)) - 450
-            bf = 495 / (1.0324 - 0.19077 * Math.log10(w - n) + 0.15456 * Math.log10(h)) - 450;
-        } else {
-            // U.S. Navy Method for Women
-            // 495 / (1.29579 - 0.35004 * log10(waist + hip - neck) + 0.22100 * log10(height)) - 450
-            bf = 495 / (1.29579 - 0.35004 * Math.log10(w + hip - n) + 0.22100 * Math.log10(h)) - 450;
+        // Calculate BMI if height and weight exist
+        if (wKg > 0 && hCm > 0) {
+            const hM = hCm / 100;
+            const bmiCalc = wKg / (hM * hM);
+            if (!isNaN(bmiCalc) && bmiCalc > 0 && bmiCalc < 100) {
+                bmiValue = bmiCalc.toFixed(1);
+            }
         }
 
-        if (isNaN(bf) || bf < 0 || bf > 100) return "--";
-        return bf.toFixed(1);
+        // Calculate Body Fat if measurements exist
+        if (hCm && n && w && (gender === "male" || hip)) {
+            let bfCalc = 0;
+            if (gender === "male") {
+                // U.S. Navy Method for Men
+                bfCalc = 495 / (1.0324 - 0.19077 * Math.log10(w - n) + 0.15456 * Math.log10(hCm)) - 450;
+            } else {
+                // U.S. Navy Method for Women
+                bfCalc = 495 / (1.29579 - 0.35004 * Math.log10(w + hip - n) + 0.22100 * Math.log10(hCm)) - 450;
+            }
+
+            if (!isNaN(bfCalc) && bfCalc >= 0 && bfCalc <= 100) {
+                bf = bfCalc.toFixed(1);
+            }
+        }
+
+        return { bf, bmi: bmiValue };
     };
 
-    const bodyFat = calculateBodyFat();
+    const { bf, bmi } = calculateVariables();
 
     return (
         <div className="bg-brand-surface rounded-2xl border border-brand-surface-light p-6 overflow-hidden relative">
@@ -42,7 +54,7 @@ export function BodyFatCalculator() {
                 </div>
                 <div>
                     <h2 className="text-xl font-bold tracking-tight">Body Composition</h2>
-                    <p className="text-xs text-gray-400 mt-1">U.S. Navy Method Estimation</p>
+                    <p className="text-xs text-gray-400 mt-1">BMI & U.S. Navy Body Fat Method</p>
                 </div>
             </div>
 
@@ -66,6 +78,16 @@ export function BodyFatCalculator() {
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
+                    <div>
+                        <label className="block text-xs font-medium text-gray-400 mb-1">Weight (kg)</label>
+                        <input
+                            type="number"
+                            value={weight}
+                            onChange={(e) => updateField("weight", e.target.value ? parseFloat(e.target.value) : "")}
+                            className="w-full bg-brand-midnight rounded-xl border border-brand-surface-light px-3 py-2 text-white outline-none focus:border-brand-lime transition-colors"
+                            placeholder="e.g. 70"
+                        />
+                    </div>
                     <div>
                         <label className="block text-xs font-medium text-gray-400 mb-1">Height (cm)</label>
                         <input
@@ -95,7 +117,7 @@ export function BodyFatCalculator() {
                     </div>
 
                     {gender === "female" && (
-                        <div className="col-span-1">
+                        <div className="col-span-2">
                             <label className="block text-xs font-medium text-gray-400 mb-1">Hips (cm)</label>
                             <input
                                 type="number"
@@ -107,11 +129,22 @@ export function BodyFatCalculator() {
                     )}
                 </div>
 
-                <div className="mt-4 pt-4 border-t border-brand-surface-light flex items-center justify-between">
-                    <span className="text-sm text-gray-400 font-medium">Estimated Body Fat</span>
-                    <div className="flex items-baseline gap-1">
-                        <span className="text-3xl font-bold tracking-tighter text-white">{bodyFat}</span>
-                        <span className="text-brand-lime font-bold">%</span>
+                <div className="mt-4 pt-4 border-t border-brand-surface-light grid grid-cols-2 gap-4">
+                    {/* BMI Output */}
+                    <div className="flex flex-col items-center justify-center p-3 bg-brand-midnight rounded-xl border border-brand-surface-light">
+                        <span className="text-xs text-gray-400 font-medium uppercase tracking-wider mb-1">BMI</span>
+                        <div className="flex items-baseline gap-1">
+                            <span className="text-2xl font-bold tracking-tighter text-white">{bmi}</span>
+                        </div>
+                    </div>
+
+                    {/* Body Fat Output */}
+                    <div className="flex flex-col items-center justify-center p-3 bg-brand-midnight rounded-xl border border-brand-surface-light">
+                        <span className="text-xs text-gray-400 font-medium uppercase tracking-wider mb-1">Body Fat</span>
+                        <div className="flex items-baseline gap-1">
+                            <span className="text-2xl font-bold tracking-tighter text-brand-lime">{bf}</span>
+                            <span className="text-brand-lime font-bold text-sm">%</span>
+                        </div>
                     </div>
                 </div>
             </div>

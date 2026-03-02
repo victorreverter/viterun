@@ -103,6 +103,9 @@ export function PacePredictor() {
                 <div className="space-y-5">
                     {activeTab === "pace" && (
                         <div className="animate-in fade-in slide-in-from-left-4 duration-300">
+                            <div className="mb-4 text-sm text-gray-400 bg-brand-midnight p-3 rounded-lg border border-brand-surface-light">
+                                Simple math to find your required pace splits for a target distance and time.
+                            </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-400 mb-2">Distance</label>
                                 <div className="flex bg-brand-midnight rounded-xl border border-brand-surface-light p-1">
@@ -166,7 +169,7 @@ export function PacePredictor() {
                     {activeTab === "predictor" && (
                         <div className="animate-in fade-in slide-in-from-right-4 duration-300">
                             <div className="mb-4 text-sm text-gray-400 bg-brand-midnight p-3 rounded-lg border border-brand-surface-light">
-                                Estimates marathon finishing time based on the <strong>Riegel Formula</strong>.
+                                Forecasts your marathon finish time using the <strong>Riegel Formula</strong>, accounting for physiological decay over longer distances.
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-400 mb-2">Recent Race Distance</label>
