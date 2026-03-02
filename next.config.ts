@@ -1,7 +1,11 @@
 import type { NextConfig } from "next";
 
-const nextConfig: NextConfig = {
-  /* config options here */
-};
+const isGithubActions = process.env.GITHUB_ACTIONS || false;
 
-export default nextConfig;
+export default {
+  output: "export",
+  basePath: "/viterun",
+  images: {
+    unoptimized: true,
+  },
+} satisfies NextConfig;
