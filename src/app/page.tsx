@@ -1,4 +1,5 @@
-import { PacePredictor } from "@/components/calculators/PacePredictor";
+import { PaceCalculator } from "@/components/calculators/PaceCalculator";
+import { RacePredictor } from "@/components/calculators/RacePredictor";
 import { BodyFatCalculator } from "@/components/calculators/BodyFatCalculator";
 
 export default function Home() {
@@ -10,7 +11,10 @@ export default function Home() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <PacePredictor />
+        <div className="flex flex-col gap-6 md:col-span-1 lg:col-span-2">
+          <PaceCalculator />
+          <RacePredictor />
+        </div>
 
         {/* Physiology Lab Column */}
         <div className="flex flex-col gap-6">
