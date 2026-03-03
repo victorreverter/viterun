@@ -1,10 +1,28 @@
 "use client";
 
+import { useState } from "react";
 import { useUserStore } from "@/store/useUserStore";
 import { TrendingUp } from "lucide-react";
 
 export function RacePredictor() {
     const { baselineDistance, baselineTime, updateField } = useUserStore();
+
+    const [hours, setHours] = useState(() => Math.floor(Number(baselineTime || 0) / 60).toString());
+    const [minutes, setMinutes] = useState(() => Math.floor(Number(baselineTime || 0) % 60).toString());
+    const [seconds, setSeconds] = useState(() => Math.round((Number(baselineTime || 0) * 60) % 60).toString());
+
+    const handleTimeChange = (type: "h" | "m" | "s", value: string) => {
+        let newH = parseInt(hours) || 0;
+        let newM = parseInt(minutes) || 0;
+        let newS = parseInt(seconds) || 0;
+
+        if (type === "h") { setHours(value); newH = parseInt(value) || 0; }
+        if (type === "m") { setMinutes(value); newM = parseInt(value) || 0; }
+        if (type === "s") { setSeconds(value); newS = parseInt(value) || 0; }
+
+        const totalMins = newH * 60 + newM + newS / 60;
+        updateField("baselineTime", totalMins > 0 ? totalMins : "");
+    };
 
     const calculatePredictions = () => {
         if (!baselineDistance || !baselineTime) {
@@ -97,14 +115,32 @@ export function RacePredictor() {
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-400 mb-2">Completion Time (Minutes)</label>
-                        <input
-                            type="number"
-                            value={baselineTime}
-                            onChange={(e) => updateField("baselineTime", e.target.value ? parseFloat(e.target.value) : "")}
-                            className="w-full bg-brand-midnight rounded-xl border border-brand-surface-light px-4 py-3 text-white outline-none focus:border-brand-lime transition-colors text-lg font-bold"
-                            placeholder="e.g. 50"
-                        />
+                        <label className="block text-sm font-medium text-gray-400 mb-2">Completion Time</label>
+                        <div className="flex gap-2">
+                            <input
+                                type="number"
+                                value={hours}
+                                onChange={(e) => handleTimeChange("h", e.target.value)}
+                                className="w-1/3 bg-brand-midnight rounded-xl border border-brand-surface-light px-4 py-3 text-white outline-none text-center focus:border-brand-lime transition-colors"
+                                placeholder="HH"
+                            />
+                            <span className="text-xl font-bold text-gray-600 flex items-center">:</span>
+                            <input
+                                type="number"
+                                value={minutes}
+                                onChange={(e) => handleTimeChange("m", e.target.value)}
+                                className="w-1/3 bg-brand-midnight rounded-xl border border-brand-surface-light px-4 py-3 text-white outline-none text-center focus:border-brand-lime transition-colors"
+                                placeholder="MM"
+                            />
+                            <span className="text-xl font-bold text-gray-600 flex items-center">:</span>
+                            <input
+                                type="number"
+                                value={seconds}
+                                onChange={(e) => handleTimeChange("s", e.target.value)}
+                                className="w-1/3 bg-brand-midnight rounded-xl border border-brand-surface-light px-4 py-3 text-white outline-none text-center focus:border-brand-lime transition-colors"
+                                placeholder="SS"
+                            />
+                        </div>
                     </div>
                 </div>
 
@@ -113,6 +149,14 @@ export function RacePredictor() {
                     <span className="text-xs text-gray-500 font-medium uppercase tracking-wider block mb-4">Predicted Results</span>
 
                     <div className="space-y-3">
+                        {/* 5K row */}
+                        {baselineDistance !== 5 && (
+                            <div className={`flex items-center justify-between p-3 rounded-lg border border-transparent bg-brand-surface/50`}>
+                                <span className="text-sm font-bold text-gray-300">5K</span>
+                                <span className="text-lg font-bold tracking-tight text-white">{preds.p5k}</span>
+                            </div>
+                        )}
+
                         {/* 10K Component row */}
                         <div className={`flex items-center justify-between p-3 rounded-lg border ${baselineDistance === 10 ? 'border-brand-lime/30 bg-brand-lime/5' : 'border-transparent bg-brand-surface/50'} `}>
                             <span className="text-sm font-bold text-gray-300">10K</span>
@@ -127,11 +171,11 @@ export function RacePredictor() {
 
                         {/* Full Marathon row (Highlighted) */}
                         <div className="flex items-center justify-between p-4 rounded-lg bg-brand-surface border border-brand-lime/20 relative overflow-hidden group hover:border-brand-lime/60 transition-colors">
-                            <div className="absolute inset-0 bg-brand-lime/5"></div>
-                            <span className="text-base font-bold text-cyber z-10 flex items-center gap-2">
+                            <div className="absolute inset-0 bg-brand-lime/5 opacity-50"></div>
+                            <span className="text-base font-bold text-brand-lime z-10 flex items-center gap-2">
                                 Marathon <span className="text-[10px] bg-brand-lime/20 text-brand-lime px-2 py-0.5 rounded-full uppercase">Goal</span>
                             </span>
-                            <span className="text-2xl font-black tracking-tighter text-transparent bg-clip-text bg-cyber drop-shadow-[0_0_10px_rgba(204,255,0,0.1)] z-10">
+                            <span className="text-2xl font-black tracking-tighter text-brand-lime drop-shadow-[0_0_10px_rgba(204,255,0,0.2)] z-10">
                                 {preds.pFull}
                             </span>
                         </div>
