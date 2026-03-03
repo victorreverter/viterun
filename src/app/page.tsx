@@ -1,6 +1,7 @@
 import { PaceCalculator } from "@/components/calculators/PaceCalculator";
 import { RacePredictor } from "@/components/calculators/RacePredictor";
 import { BodyFatCalculator } from "@/components/calculators/BodyFatCalculator";
+import { HRZoneGenerator } from "@/components/calculators/HRZoneGenerator";
 
 export default function Home() {
   return (
@@ -18,16 +19,8 @@ export default function Home() {
 
         {/* Physiology Lab Column */}
         <div className="flex flex-col gap-6">
+          <HRZoneGenerator />
           <BodyFatCalculator />
-
-          <div className="bg-brand-surface rounded-2xl border border-brand-surface-light p-6 h-48 opacity-50 relative pointer-events-none">
-            <div className="absolute inset-0 flex items-center justify-center z-10">
-              <div className="px-4 py-2 bg-brand-midnight border border-brand-surface-light rounded-full text-brand-lime font-medium text-xs shadow-lg">
-                HR Zones Coming Soon
-              </div>
-            </div>
-            <div className="blur-[2px] h-full" />
-          </div>
         </div>
       </div>
     </div>
