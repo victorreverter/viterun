@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Activity, Timer, TrendingUp, User, Settings, Medal } from "lucide-react";
+import { Activity, Timer, TrendingUp, User, Medal } from "lucide-react";
 
 export function Sidebar() {
     return (
@@ -29,13 +29,6 @@ export function Sidebar() {
                     Physiology Lab
                 </Link>
             </nav>
-
-            <div className="p-4 border-t border-brand-surface-light">
-                <Link href="#" className="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-brand-surface-light transition-colors">
-                    <Settings className="w-5 h-5" />
-                    Settings
-                </Link>
-            </div>
         </aside>
     );
 }
