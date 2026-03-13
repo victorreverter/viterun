@@ -1,8 +1,29 @@
+"use client";
+
+import { PaceCalculator } from "@/components/calculators/PaceCalculator";
+import { RacePredictor } from "@/components/calculators/RacePredictor";
+import { BodyFatCalculator } from "@/components/calculators/BodyFatCalculator";
+import { HRZoneGenerator } from "@/components/calculators/HRZoneGenerator";
+import { useSearchStore } from "@/store/useSearchStore";
+
+const CALCULATORS = [
+  { name: "Race Predictor", component: <div key="race" className="col-span-1 md:col-span-2"><RacePredictor /></div> },
+  { name: "HR Zones Generator", component: <div key="hr" className="col-span-1 md:col-span-2"><HRZoneGenerator /></div> },
+  { name: "Pace Calculator", component: <div key="pace" className="col-span-1"><PaceCalculator /></div> },
+  { name: "Body Fat Calculator", component: <div key="fat" className="col-span-1"><BodyFatCalculator /></div> },
+];
+
 export default function Home() {
+  const { query } = useSearchStore();
+
+  const filteredCalculators = CALCULATORS.filter(calc => 
+    calc.name.toLowerCase().includes(query.toLowerCase())
+  );
+
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
       <div>
-        <h1 className="text-3xl font-bold tracking-tighter text-white">Dashboard</h1>
+        <h1 className="text-3xl font-bold tracking-tighter text-white">Runner Profile</h1>
         <p className="text-gray-400 mt-2">Welcome to your mission control. Your PRs, saved stats, and logs will appear here.</p>
       </div>
 
@@ -45,6 +66,21 @@ export default function Home() {
             </div>
             <button className="w-full py-2 bg-brand-surface-light hover:bg-white/10 text-white rounded-lg text-sm font-medium transition-colors">Calculate Pace</button>
         </div>
+      </div>
+
+      <div className="pt-8 border-t border-brand-surface-light">
+        <h2 className="text-2xl font-bold text-white mb-6">Explore Tools</h2>
+        
+        {filteredCalculators.length === 0 ? (
+            <div className="col-span-1 lg:col-span-3 p-12 flex flex-col items-center justify-center text-center bg-brand-surface rounded-2xl border border-brand-surface-light border-dashed">
+              <h2 className="text-xl font-bold text-gray-300">No tools found</h2>
+              <p className="text-gray-500 mt-2 max-w-md">We couldn't find any calculators or predictors matching "{query}". Try searching for something else like "Pace" or "Zones".</p>
+            </div>
+        ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-6 items-start">
+               {filteredCalculators.map(calc => calc.component)}
+            </div>
+        )}
       </div>
     </div>
   );

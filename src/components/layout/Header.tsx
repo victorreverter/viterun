@@ -1,6 +1,11 @@
+"use client";
+
 import { Menu, Search } from "lucide-react";
+import { useSearchStore } from "@/store/useSearchStore";
 
 export function Header() {
+    const { query, setQuery } = useSearchStore();
+
     return (
         <header className="h-20 border-b border-brand-surface-light bg-brand-midnight/80 backdrop-blur-md sticky top-0 z-50 flex flex-col justify-center px-8 max-lg:px-4">
             <div className="flex items-center justify-between">
@@ -13,6 +18,8 @@ export function Header() {
                         <Search className="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
                         <input
                             type="text"
+                            value={query}
+                            onChange={(e) => setQuery(e.target.value)}
                             placeholder="Search features..."
                             className="bg-brand-surface border border-brand-surface-light rounded-full pl-10 pr-4 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-brand-lime focus:ring-1 focus:ring-brand-lime transition-all w-64"
                         />
