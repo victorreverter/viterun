@@ -1,4 +1,4 @@
-import { Bell, Menu, Search } from "lucide-react";
+import { Menu, Search } from "lucide-react";
 
 export function Header() {
     return (
@@ -27,16 +27,6 @@ export function Header() {
                         </div>
                     </div>
 
-                    <button className="relative p-2 text-gray-400 hover:text-white rounded-full hover:bg-brand-surface-light transition-colors">
-                        <Bell className="w-5 h-5" />
-                        <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-brand-lime"></span>
-                    </button>
-
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-brand-lime to-cyan-400 p-[2px]">
-                        <div className="w-full h-full rounded-full bg-brand-surface border-2 border-brand-midnight overflow-hidden">
-                            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Runner&backgroundColor=1A1A1A" alt="Avatar" className="w-full h-full object-cover" />
-                        </div>
-                    </div>
                 </div>
             </div>
         </header>
