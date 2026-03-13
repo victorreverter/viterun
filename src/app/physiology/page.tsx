@@ -9,7 +9,7 @@ export default function PhysiologyPage() {
         <p className="text-gray-400 mt-2">Analyze your body composition and training zones.</p>
       </div>
 
-      <div className="max-w-5xl w-full">
+      <div className="max-w-2xl w-full">
         <div className="flex flex-col gap-6 w-full">
           <HRZoneGenerator />
           <BodyFatCalculator />

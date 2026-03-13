@@ -54,9 +54,9 @@ export function HRZoneGenerator() {
                 </p>
             </div>
 
-            <div className="space-y-6">
+            <div className="flex flex-col md:flex-row md:items-start gap-8 mt-6">
                 {/* INPUTS ROW */}
-                <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="w-full md:w-[35%] flex flex-col gap-4">
                     <div>
                         <label className="block text-sm font-medium text-gray-400 mb-2">Age</label>
                         <input
@@ -105,7 +105,7 @@ export function HRZoneGenerator() {
                 </div>
 
                 {/* ZONES OUTPUT */}
-                <div className="space-y-3 pt-4 border-t border-brand-surface-light">
+                <div className="w-full md:w-[65%] space-y-3 md:pl-8 md:border-l border-brand-surface-light">
                     {calculatedZones.map((zone, idx) => (
                         <div key={idx} className={`flex items-center justify-between p-3 rounded-xl border ${zone.color} bg-brand-midnight relative overflow-hidden`}>
                             <div className="absolute left-0 top-0 bottom-0 w-1 bg-current opacity-50" />
