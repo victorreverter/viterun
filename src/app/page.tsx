@@ -4,6 +4,7 @@ import { PaceCalculator } from "@/components/calculators/PaceCalculator";
 import { RacePredictor } from "@/components/calculators/RacePredictor";
 import { BodyFatCalculator } from "@/components/calculators/BodyFatCalculator";
 import { HRZoneGenerator } from "@/components/calculators/HRZoneGenerator";
+import { NextRaceWidget } from "@/components/dashboard/NextRaceWidget";
 import { useSearchStore } from "@/store/useSearchStore";
 
 const CALCULATORS = [
@@ -29,17 +30,7 @@ export default function Home() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {/* Next Race Widget */}
-        <div className="bg-brand-surface border border-brand-surface-light hover:border-brand-lime/50 transition-colors rounded-2xl p-6 flex flex-col gap-4 shadow-lg shadow-black/20">
-            <h3 className="text-brand-lime font-mono text-sm tracking-wider flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-brand-lime shadow-[0_0_8px_#CCFF00]"></span>
-              NEXT RACE
-            </h3>
-            <div className="flex-1 flex flex-col justify-center py-4">
-                <div className="text-4xl font-bold text-white mb-2">TBD</div>
-                <p className="text-gray-400 text-sm leading-relaxed">No target race set. Select a future marathon date to begin the countdown.</p>
-            </div>
-            <button className="w-full py-2 bg-brand-surface-light hover:bg-white/10 text-white rounded-lg text-sm font-medium transition-colors">Setup Race</button>
-        </div>
+        <NextRaceWidget />
 
         {/* Weekly Volume Widget */}
         <div className="bg-brand-surface border border-brand-surface-light hover:border-brand-lime/50 transition-colors rounded-2xl p-6 flex flex-col gap-4 shadow-lg shadow-black/20">

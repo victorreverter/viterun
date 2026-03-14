@@ -12,6 +12,10 @@ interface UserState {
     hips: number | ''; // for females
     gender: 'male' | 'female';
 
+    // Target Next Race Tracker
+    nextRaceName: string;
+    nextRaceDate: string; // ISO String Date
+
     // Base Race times (e.g. 10k, HM) in minutes to predict full marathon
     baselineDistance: number | ''; // km
     baselineTime: number | ''; // minutes
@@ -31,6 +35,9 @@ export const useUserStore = create<UserState>()(
             waist: '',
             hips: '',
             gender: 'male',
+
+            nextRaceName: '',
+            nextRaceDate: '',
 
             baselineDistance: 10,
             baselineTime: 50,
