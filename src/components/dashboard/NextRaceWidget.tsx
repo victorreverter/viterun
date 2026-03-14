@@ -1,6 +1,8 @@
 "use client";
 
 import { useUserStore } from "@/store/useUserStore";
+import { Flag, CalendarDays } from "lucide-react";
+import { CustomDatePicker } from "@/components/ui/CustomDatePicker";
 
 export function NextRaceWidget() {
     const { nextRaceName, nextRaceDate, updateField } = useUserStore();
@@ -21,9 +23,11 @@ export function NextRaceWidget() {
     const isPast = daysRemaining !== null && daysRemaining < 0;
 
     return (
-        <div className="bg-brand-surface border border-brand-surface-light hover:border-brand-lime/50 transition-colors rounded-2xl p-6 flex flex-col gap-4 shadow-lg shadow-black/20 relative overflow-hidden">
+        <div className="bg-brand-surface border border-brand-surface-light hover:border-brand-lime/50 transition-colors rounded-2xl p-6 flex flex-col gap-4 shadow-lg shadow-black/20 relative">
             {/* Glow effect */}
-            <div className="absolute top-0 right-0 w-32 h-32 bg-brand-lime/5 blur-[50px] pointer-events-none rounded-full" />
+            <div className="absolute inset-0 overflow-hidden rounded-2xl pointer-events-none">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-brand-lime/5 blur-[50px] rounded-full" />
+            </div>
             
             <h3 className="text-brand-lime font-mono text-sm tracking-wider flex items-center justify-between gap-2 z-10">
                 <div className="flex items-center gap-2">
@@ -33,19 +37,21 @@ export function NextRaceWidget() {
             </h3>
 
             {/* Inputs always visible at the top */}
-            <div className="flex flex-col gap-3 z-10">
-                <input
-                    type="text"
-                    value={nextRaceName}
-                    onChange={(e) => updateField("nextRaceName", e.target.value)}
-                    placeholder="Race Name (e.g. Valencia)"
-                    className="w-full bg-brand-midnight rounded-lg border border-brand-surface-light px-3 py-2 text-white text-sm outline-none focus:border-brand-lime transition-colors"
-                />
-                <input
-                    type="date"
-                    value={nextRaceDate}
-                    onChange={(e) => updateField("nextRaceDate", e.target.value)}
-                    className="w-full bg-brand-midnight rounded-lg border border-brand-surface-light px-3 py-2 text-gray-400 text-sm outline-none focus:border-brand-lime transition-colors [color-scheme:dark]"
+            <div className="flex flex-col gap-3 z-50 w-full relative">
+                <div className="relative group w-full">
+                    <Flag className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-brand-lime transition-colors z-10 pointer-events-none" />
+                    <input
+                        type="text"
+                        value={nextRaceName}
+                        onChange={(e) => updateField("nextRaceName", e.target.value)}
+                        placeholder="Race Name (e.g. Valencia)"
+                        className="w-full bg-brand-midnight/50 hover:bg-brand-midnight rounded-xl border border-brand-surface-light px-3 py-2.5 pl-10 text-white text-sm outline-none focus:border-brand-lime transition-all"
+                    />
+                </div>
+                
+                <CustomDatePicker 
+                    value={nextRaceDate} 
+                    onChange={(date: string) => updateField("nextRaceDate", date)} 
                 />
             </div>
 
