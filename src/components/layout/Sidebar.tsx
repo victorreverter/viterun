@@ -10,9 +10,6 @@ export function Sidebar() {
 
     const links = [
         { href: "/", label: "Dashboard", icon: Activity },
-        { href: "/calculators", label: "Calculators", icon: Timer },
-        { href: "/predictions", label: "Predictions", icon: TrendingUp },
-        { href: "/physiology", label: "Physiology Lab", icon: User },
     ];
 
     return (
