@@ -17,6 +17,34 @@ const DISTANCES: { key: DistanceKey; label: string; color: string }[] = [
     { key: "marathon", label: "Marathon", color: "bg-red-400 shadow-[0_0_8px_#f87171]" },
 ];
 
+// Helper: "hh:mm:ss" or "mm:ss" -> Total Seconds
+const timeToSeconds = (timeStr: string | { current: string; previous: string } | undefined) => {
+    // Graceful backward compatibility handling
+    if (!timeStr) return 0;
+    const str = typeof timeStr === 'string' ? timeStr : (timeStr.current || "");
+    if (!str) return 0;
+
+    const parts = str.split(":").map(Number);
+    if (parts.length === 3) return parts[0] * 3600 + parts[1] * 60 + parts[2];
+    if (parts.length === 2) return parts[0] * 60 + parts[1];
+    return 0;
+};
+
+// Helper: Total Seconds -> Formatted string (e.g. "1m 12s" or "15s")
+const formatDiff = (totalSeconds: number) => {
+    const absSeconds = Math.abs(totalSeconds);
+    const h = Math.floor(absSeconds / 3600);
+    const m = Math.floor((absSeconds % 3600) / 60);
+    const s = absSeconds % 60;
+    
+    const parts = [];
+    if (h > 0) parts.push(`${h}h`);
+    if (m > 0 || h > 0) parts.push(`${m}m`);
+    parts.push(`${s}s`);
+    
+    return parts.join(" ");
+};
+
 export function PersonalRecordsWidget() {
     const { personalRecords, updatePersonalRecord } = useUserStore();
     const [isEditing, setIsEditing] = useState(false);
@@ -26,7 +54,10 @@ export function PersonalRecordsWidget() {
     const getInitialEditRecords = () => {
         const init = {} as Record<DistanceKey, TimeSplit>;
         (Object.keys(personalRecords) as DistanceKey[]).forEach(k => {
-            const val = personalRecords[k];
+            const record = personalRecords[k];
+            // Backward compatibility for old string data
+            const val = typeof record === 'string' ? record : (record?.current || "");
+            
             const parts = val ? val.split(":") : [];
             if (parts.length === 3) {
                 init[k] = { h: parts[0], m: parts[1], s: parts[2] };
@@ -67,10 +98,15 @@ export function PersonalRecordsWidget() {
     return (
         <div className="bg-brand-surface border border-brand-surface-light hover:border-brand-lime/50 transition-colors rounded-2xl p-6 flex flex-col gap-4 shadow-lg shadow-black/20">
             <div className="flex items-center justify-between">
-                <h3 className="text-brand-lime font-mono text-sm tracking-wider flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-yellow-400 shadow-[0_0_8px_#facc15]"></span>
-                    PERSONAL RECORDS
-                </h3>
+                <div className="flex flex-col gap-1">
+                    <h3 className="text-brand-lime font-mono text-sm tracking-wider flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-yellow-400 shadow-[0_0_8px_#facc15]"></span>
+                        PERSONAL RECORDS
+                    </h3>
+                    <span className="text-gray-500 text-[10px] uppercase font-mono tracking-wider ml-6">
+                        In () will appear the diff. with previous records
+                    </span>
+                </div>
                 {isEditing ? (
                     <div className="flex gap-2">
                         <button 
@@ -134,15 +170,44 @@ export function PersonalRecordsWidget() {
                                 />
                             </div>
                         ) : (
-                            <span className={`text-sm tracking-tight font-semibold ${personalRecords[key] ? 'text-white font-mono' : 'text-gray-500 italic'}`}>
-                                {personalRecords[key] || "Not set"}
-                            </span>
+                            <div className="flex items-center gap-2">
+                                {(() => {
+                                    const record = personalRecords[key];
+                                    const currentStr = typeof record === 'string' ? record : (record?.current || "");
+                                    const previousStr = typeof record === 'string' ? "" : (record?.previous || "");
+                                    
+                                    const currentSecs = timeToSeconds(currentStr);
+                                    const previousSecs = timeToSeconds(previousStr);
+                                    
+                                    let diffElement = null;
+                                    if (currentSecs > 0 && previousSecs > 0) {
+                                        const diff = currentSecs - previousSecs;
+                                        if (diff < 0) {
+                                            diffElement = <span className="text-green-400 font-mono text-xs font-medium">(-{formatDiff(diff)})</span>;
+                                        } else if (diff > 0) {
+                                            diffElement = <span className="text-red-400 font-mono text-xs font-medium">(+{formatDiff(diff)})</span>;
+                                        }
+                                    }
+
+                                    return (
+                                        <>
+                                            <span className={`text-sm tracking-tight font-semibold min-w-[60px] text-right ${currentStr ? 'text-white font-mono' : 'text-gray-500 italic'}`}>
+                                                {currentStr || "Not set"}
+                                            </span>
+                                            {diffElement}
+                                        </>
+                                    );
+                                })()}
+                            </div>
                         )}
                     </div>
                 ))}
             </div>
             
-            {!isEditing && Object.values(personalRecords).every(v => !v) && (
+            {!isEditing && Object.values(personalRecords).every(v => {
+                const current = typeof v === 'string' ? v : (v?.current || "");
+                return !current;
+            }) && (
                 <p className="text-gray-500 text-xs italic text-center mt-2">
                     Click edit to add your PRs
                 </p>

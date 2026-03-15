@@ -25,13 +25,13 @@ export interface UserState {
 
     // Personal Records
     personalRecords: {
-        "1km": string;
-        "1mi": string;
-        "5km": string;
-        "10km": string;
-        "10mi": string;
-        "halfMarathon": string;
-        "marathon": string;
+        "1km": { current: string; previous: string };
+        "1mi": { current: string; previous: string };
+        "5km": { current: string; previous: string };
+        "10km": { current: string; previous: string };
+        "10mi": { current: string; previous: string };
+        "halfMarathon": { current: string; previous: string };
+        "marathon": { current: string; previous: string };
     };
 
     updateField: (field: keyof Omit<UserState, 'updateField'>, value: number | string) => void;
@@ -59,23 +59,44 @@ export const useUserStore = create<UserState>()(
             targetPace: '',
 
             personalRecords: {
-                "1km": "",
-                "1mi": "",
-                "5km": "",
-                "10km": "",
-                "10mi": "",
-                "halfMarathon": "",
-                "marathon": "",
+                "1km": { current: "", previous: "" },
+                "1mi": { current: "", previous: "" },
+                "5km": { current: "", previous: "" },
+                "10km": { current: "", previous: "" },
+                "10mi": { current: "", previous: "" },
+                "halfMarathon": { current: "", previous: "" },
+                "marathon": { current: "", previous: "" },
             },
 
             updateField: (field, value) => set((state) => ({ ...state, [field]: value })),
-            updatePersonalRecord: (distance, time) => set((state) => ({
-                ...state,
-                personalRecords: {
-                    ...state.personalRecords,
-                    [distance]: time
+            updatePersonalRecord: (distance, time) => set((state) => {
+                const existing = state.personalRecords[distance];
+                
+                // Handle backwards compatibility for users who might have old string records
+                // If it's a string, treat it as the 'current' to be pushed to 'previous'
+                let prevTime = "";
+                if (typeof existing === 'string') {
+                    prevTime = existing;
+                } else if (existing?.current) {
+                    prevTime = existing.current;
                 }
-            })),
+
+                // If they enter the exact same time, don't update previous
+                if (prevTime === time) {
+                    return state;
+                }
+
+                return {
+                    ...state,
+                    personalRecords: {
+                        ...state.personalRecords,
+                        [distance]: {
+                            current: time,
+                            previous: prevTime
+                        }
+                    }
+                };
+            }),
         }),
         {
             name: 'viterun-user-storage',
