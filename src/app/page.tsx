@@ -6,6 +6,7 @@ import { BodyFatCalculator } from "@/components/calculators/BodyFatCalculator";
 import { HRZoneGenerator } from "@/components/calculators/HRZoneGenerator";
 import { NextRaceWidget } from "@/components/dashboard/NextRaceWidget";
 import { useSearchStore } from "@/store/useSearchStore";
+import { useUserStore } from "@/store/useUserStore";
 
 const CALCULATORS = [
   { name: "Race Predictor", component: <div key="race" className="col-span-1 md:col-span-2"><RacePredictor /></div> },
@@ -16,6 +17,11 @@ const CALCULATORS = [
 
 export default function Home() {
   const { query } = useSearchStore();
+  const { targetPace } = useUserStore();
+
+  const handleScrollToPaceCalc = () => {
+    document.getElementById("pace-calculator")?.scrollIntoView({ behavior: "smooth" });
+  };
 
   const filteredCalculators = CALCULATORS.filter(calc => 
     calc.name.toLowerCase().includes(query.toLowerCase())
@@ -52,10 +58,22 @@ export default function Home() {
               TARGET PACE
             </h3>
             <div className="flex-1 flex flex-col justify-center py-4">
-                <div className="text-4xl font-bold text-white mb-2">--:--<span className="text-xl text-gray-500 ml-1">/km</span></div>
-                <p className="text-gray-400 text-sm leading-relaxed">Calculate your marathon pace in the tools tab to save it here.</p>
+                <div className="text-4xl font-bold text-white mb-2">
+                    {targetPace ? targetPace.split("/")[0] : "--:--"}
+                    <span className="text-xl text-gray-500 ml-1">
+                        /{targetPace ? targetPace.split("/")[1] : "km"}
+                    </span>
+                </div>
+                <p className="text-gray-400 text-sm leading-relaxed">
+                    {targetPace ? "Your saved target pace. Crush it!" : "Calculate your target pace below to save it here."}
+                </p>
             </div>
-            <button className="w-full py-2 bg-brand-surface-light hover:bg-white/10 text-white rounded-lg text-sm font-medium transition-colors">Calculate Pace</button>
+            <button 
+                onClick={handleScrollToPaceCalc}
+                className="w-full py-2 bg-brand-surface-light hover:bg-white/10 text-white rounded-lg text-sm font-medium transition-colors"
+            >
+                {targetPace ? "Update Pace" : "Calculate Pace"}
+            </button>
         </div>
       </div>
 

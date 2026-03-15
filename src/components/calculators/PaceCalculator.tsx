@@ -1,9 +1,19 @@
 "use client";
 
 import { useState } from "react";
-import { Timer } from "lucide-react";
+import { Timer, Check } from "lucide-react";
+import { useUserStore } from "@/store/useUserStore";
 
 export function PaceCalculator() {
+    const { updateField } = useUserStore();
+    const [savedPace, setSavedPace] = useState<string | null>(null);
+
+    const handleSavePace = (pace: string) => {
+        updateField("targetPace", pace);
+        setSavedPace(pace);
+        setTimeout(() => setSavedPace(null), 2000);
+    };
+
     const [activeTab, setActiveTab] = useState<"pace" | "time">("pace");
 
     const [distance, setDistance] = useState("10");
@@ -84,7 +94,7 @@ export function PaceCalculator() {
     const calculatedTime = calculateTime();
 
     return (
-        <div className="bg-brand-surface rounded-2xl border border-brand-surface-light p-6 overflow-hidden relative">
+        <div id="pace-calculator" className="bg-brand-surface rounded-2xl border border-brand-surface-light p-6 overflow-hidden relative">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
                 <div className="flex items-center gap-3">
                     <div className="p-2 bg-brand-surface-light rounded-lg text-brand-lime">
@@ -171,17 +181,36 @@ export function PaceCalculator() {
                         </div>
 
                         <div className="grid grid-cols-2 gap-4 mt-6">
-                            <div className="bg-brand-midnight rounded-xl p-4 flex flex-col items-center justify-center border border-brand-surface-light hover:border-brand-lime/50 transition-colors">
-                                <span className="text-xs text-gray-500 font-medium uppercase tracking-wider mb-2">Required Pace</span>
-                                <span className="text-2xl font-bold tracking-tighter text-cyber">{paces.perKm}</span>
+                            <button
+                                onClick={() => handleSavePace(`${paces.perKm}/km`)}
+                                className="bg-brand-midnight rounded-xl p-4 flex flex-col items-center justify-center border border-brand-surface-light hover:border-brand-lime transition-colors group relative overflow-hidden"
+                            >
+                                <span className="text-xs text-gray-500 font-medium uppercase tracking-wider mb-2 group-hover:text-brand-lime transition-colors">Required Pace</span>
+                                <span className="text-2xl font-bold tracking-tighter text-cyber group-hover:scale-105 transition-transform">{paces.perKm}</span>
                                 <span className="text-xs text-gray-500 mt-1">per km</span>
-                            </div>
-                            <div className="bg-brand-midnight rounded-xl p-4 flex flex-col items-center justify-center border border-brand-surface-light hover:border-brand-lime/50 transition-colors">
-                                <span className="text-xs text-gray-500 font-medium uppercase tracking-wider mb-2">Required Pace</span>
-                                <span className="text-2xl font-bold tracking-tighter">{paces.perMi}</span>
+                                {savedPace === `${paces.perKm}/km` && (
+                                    <div className="absolute inset-0 bg-brand-lime flex items-center justify-center animate-in fade-in duration-200">
+                                        <Check className="w-8 h-8 text-black" />
+                                    </div>
+                                )}
+                            </button>
+                            <button
+                                onClick={() => handleSavePace(`${paces.perMi}/mi`)}
+                                className="bg-brand-midnight rounded-xl p-4 flex flex-col items-center justify-center border border-brand-surface-light hover:border-brand-lime transition-colors group relative overflow-hidden"
+                            >
+                                <span className="text-xs text-gray-500 font-medium uppercase tracking-wider mb-2 group-hover:text-brand-lime transition-colors">Required Pace</span>
+                                <span className="text-2xl font-bold tracking-tighter group-hover:scale-105 transition-transform">{paces.perMi}</span>
                                 <span className="text-xs text-gray-500 mt-1">per mi</span>
-                            </div>
+                                {savedPace === `${paces.perMi}/mi` && (
+                                    <div className="absolute inset-0 bg-brand-lime flex items-center justify-center animate-in fade-in duration-200">
+                                        <Check className="w-8 h-8 text-black" />
+                                    </div>
+                                )}
+                            </button>
                         </div>
+                        <p className="text-center text-xs text-brand-lime/80 mt-4 h-4">
+                            {savedPace ? "Pace saved to Target Pace widget!" : "Click a pace above to set as Target Pace"}
+                        </p>
                     </div>
                 )}
 
@@ -227,6 +256,22 @@ export function PaceCalculator() {
                         <div className="bg-brand-midnight rounded-xl p-4 flex flex-col items-center justify-center border border-brand-surface-light hover:border-brand-lime/50 transition-colors min-h-[142px]">
                             <span className="text-xs text-gray-500 font-medium uppercase tracking-wider mb-2">Total Time</span>
                             <span className="text-4xl font-bold tracking-tighter text-cyber">{calculatedTime}</span>
+                        </div>
+                        <div className="mt-4">
+                            <button
+                                onClick={() => {
+                                    const m = parseInt(paceMinutes) || 0;
+                                    const s = parseInt(paceSeconds) || 0;
+                                    handleSavePace(`${m}:${s.toString().padStart(2, "0")}/${paceUnit}`);
+                                }}
+                                className="w-full py-3 bg-brand-surface-light hover:bg-white/10 text-white rounded-xl text-sm font-medium transition-colors border border-brand-surface-light flex items-center justify-center gap-2"
+                            >
+                                {savedPace ? (
+                                    <><Check className="w-4 h-4 text-brand-lime" /> Saved to Target Pace</>
+                                ) : (
+                                    "Save as Target Pace"
+                                )}
+                            </button>
                         </div>
                     </div>
                 )}

@@ -20,6 +20,9 @@ interface UserState {
     baselineDistance: number | ''; // km
     baselineTime: number | ''; // minutes
 
+    // Target Pace
+    targetPace: string;
+
     updateField: (field: keyof Omit<UserState, 'updateField'>, value: number | string) => void;
 }
 
@@ -41,6 +44,7 @@ export const useUserStore = create<UserState>()(
 
             baselineDistance: 10,
             baselineTime: 50,
+            targetPace: '',
 
             updateField: (field, value) => set((state) => ({ ...state, [field]: value })),
         }),
