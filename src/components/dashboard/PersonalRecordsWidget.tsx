@@ -21,20 +21,46 @@ export function PersonalRecordsWidget() {
     const { personalRecords, updatePersonalRecord } = useUserStore();
     const [isEditing, setIsEditing] = useState(false);
     
-    // Local state to avoid updating the store on every keystroke
-    const [localRecords, setLocalRecords] = useState(personalRecords);
+    type TimeSplit = { h: string; m: string; s: string };
+
+    const getInitialEditRecords = () => {
+        const init = {} as Record<DistanceKey, TimeSplit>;
+        (Object.keys(personalRecords) as DistanceKey[]).forEach(k => {
+            const val = personalRecords[k];
+            const parts = val ? val.split(":") : [];
+            if (parts.length === 3) {
+                init[k] = { h: parts[0], m: parts[1], s: parts[2] };
+            } else if (parts.length === 2) {
+                init[k] = { h: "", m: parts[0], s: parts[1] };
+            } else {
+                init[k] = { h: "", m: "", s: "" };
+            }
+        });
+        return init;
+    };
+
+    const [editRecords, setEditRecords] = useState<Record<DistanceKey, TimeSplit>>(getInitialEditRecords());
 
     const handleSave = () => {
-        // Save all local updates to the store
-        (Object.entries(localRecords) as [DistanceKey, string][]).forEach(([key, value]) => {
-            updatePersonalRecord(key, value);
+        (Object.entries(editRecords) as [DistanceKey, TimeSplit][]).forEach(([key, { h, m, s }]) => {
+            const hv = parseInt(h) || 0;
+            const mv = parseInt(m) || 0;
+            const sv = parseInt(s) || 0;
+            
+            if (hv === 0 && mv === 0 && sv === 0 && !h && !m && !s) {
+                updatePersonalRecord(key, "");
+            } else {
+                const formattedS = sv.toString().padStart(2, "0");
+                const formattedM = hv > 0 ? mv.toString().padStart(2, "0") : mv.toString();
+                const timeStr = hv > 0 ? `${hv}:${formattedM}:${formattedS}` : `${formattedM}:${formattedS}`;
+                updatePersonalRecord(key, timeStr);
+            }
         });
         setIsEditing(false);
     };
 
     const handleCancel = () => {
-        // Revert to store values
-        setLocalRecords(personalRecords);
+        setEditRecords(getInitialEditRecords());
         setIsEditing(false);
     };
 
@@ -62,7 +88,10 @@ export function PersonalRecordsWidget() {
                     </div>
                 ) : (
                     <button 
-                        onClick={() => setIsEditing(true)}
+                        onClick={() => {
+                            setEditRecords(getInitialEditRecords());
+                            setIsEditing(true);
+                        }}
                         className="text-gray-400 hover:text-brand-lime transition-colors"
                     >
                         <Edit2 className="w-4 h-4" />
@@ -79,16 +108,34 @@ export function PersonalRecordsWidget() {
                         </div>
                         
                         {isEditing ? (
-                            <input
-                                type="text"
-                                value={localRecords[key]}
-                                onChange={(e) => setLocalRecords(prev => ({ ...prev, [key]: e.target.value }))}
-                                placeholder="--:--:--"
-                                className="w-24 bg-brand-midnight/50 border border-brand-surface-light rounded-md px-2 py-1 text-right text-sm text-white font-mono outline-none focus:border-brand-lime transition-colors"
-                            />
+                            <div className="flex items-center gap-1">
+                                <input
+                                    type="text"
+                                    value={editRecords[key].h}
+                                    onChange={(e) => setEditRecords(prev => ({ ...prev, [key]: { ...prev[key], h: e.target.value } }))}
+                                    placeholder="hh"
+                                    className="w-8 bg-brand-midnight/50 border border-brand-surface-light rounded-md px-1 py-1 text-center text-xs text-white font-mono outline-none focus:border-brand-lime transition-colors"
+                                />
+                                <span className="text-gray-600 font-bold">:</span>
+                                <input
+                                    type="text"
+                                    value={editRecords[key].m}
+                                    onChange={(e) => setEditRecords(prev => ({ ...prev, [key]: { ...prev[key], m: e.target.value } }))}
+                                    placeholder="mm"
+                                    className="w-8 bg-brand-midnight/50 border border-brand-surface-light rounded-md px-1 py-1 text-center text-xs text-white font-mono outline-none focus:border-brand-lime transition-colors"
+                                />
+                                <span className="text-gray-600 font-bold">:</span>
+                                <input
+                                    type="text"
+                                    value={editRecords[key].s}
+                                    onChange={(e) => setEditRecords(prev => ({ ...prev, [key]: { ...prev[key], s: e.target.value } }))}
+                                    placeholder="ss"
+                                    className="w-8 bg-brand-midnight/50 border border-brand-surface-light rounded-md px-1 py-1 text-center text-xs text-white font-mono outline-none focus:border-brand-lime transition-colors"
+                                />
+                            </div>
                         ) : (
-                            <span className="text-white font-mono text-sm tracking-tight font-semibold">
-                                {personalRecords[key] || "--:--:--"}
+                            <span className={`text-sm tracking-tight font-semibold ${personalRecords[key] ? 'text-white font-mono' : 'text-gray-500 italic'}`}>
+                                {personalRecords[key] || "Not set"}
                             </span>
                         )}
                     </div>
