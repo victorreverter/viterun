@@ -5,7 +5,7 @@ import { Timer, Check } from "lucide-react";
 import { useUserStore } from "@/store/useUserStore";
 
 export function PaceCalculator() {
-    const { updateField } = useUserStore();
+    const { updateField, shouldHighlightPaceCalculator } = useUserStore();
     const [savedPace, setSavedPace] = useState<string | null>(null);
 
     const handleSavePace = (pace: string) => {
@@ -94,7 +94,11 @@ export function PaceCalculator() {
     const calculatedTime = calculateTime();
 
     return (
-        <div id="pace-calculator" className="bg-brand-surface rounded-2xl border border-brand-surface-light p-6 overflow-hidden relative">
+        <div id="pace-calculator" className={`bg-brand-surface rounded-2xl border p-6 overflow-hidden relative transition-all duration-700 ${
+            shouldHighlightPaceCalculator 
+                ? "border-brand-lime shadow-[0_0_20px_#CCFF00]" 
+                : "border-brand-surface-light"
+        }`}>
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
                 <div className="flex items-center gap-3">
                     <div className="p-2 bg-brand-surface-light rounded-lg text-brand-lime">

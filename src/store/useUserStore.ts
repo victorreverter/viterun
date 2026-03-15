@@ -22,6 +22,7 @@ export interface UserState {
 
     // Target Pace
     targetPace: string;
+    shouldHighlightPaceCalculator: boolean;
 
     // Personal Records
     personalRecords: {
@@ -34,8 +35,9 @@ export interface UserState {
         "marathon": { current: string; previous: string };
     };
 
-    updateField: (field: keyof Omit<UserState, 'updateField'>, value: number | string) => void;
+    updateField: (field: keyof Omit<UserState, 'updateField' | 'triggerPaceHighlight'>, value: number | string | boolean) => void;
     updatePersonalRecord: (distance: keyof UserState['personalRecords'], time: string) => void;
+    triggerPaceHighlight: () => void;
 }
 
 export const useUserStore = create<UserState>()(
@@ -57,6 +59,7 @@ export const useUserStore = create<UserState>()(
             baselineDistance: 10,
             baselineTime: 50,
             targetPace: '',
+            shouldHighlightPaceCalculator: false,
 
             personalRecords: {
                 "1km": { current: "", previous: "" },
@@ -69,6 +72,14 @@ export const useUserStore = create<UserState>()(
             },
 
             updateField: (field, value) => set((state) => ({ ...state, [field]: value })),
+            
+            triggerPaceHighlight: () => {
+                set({ shouldHighlightPaceCalculator: true });
+                setTimeout(() => {
+                    set({ shouldHighlightPaceCalculator: false });
+                }, 2000);
+            },
+
             updatePersonalRecord: (distance, time) => set((state) => {
                 const existing = state.personalRecords[distance];
                 

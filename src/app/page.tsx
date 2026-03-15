@@ -18,10 +18,13 @@ const CALCULATORS = [
 
 export default function Home() {
   const { query } = useSearchStore();
-  const { targetPace } = useUserStore();
+  const { targetPace, triggerPaceHighlight } = useUserStore();
 
   const handleScrollToPaceCalc = () => {
     document.getElementById("pace-calculator")?.scrollIntoView({ behavior: "smooth" });
+    setTimeout(() => {
+        triggerPaceHighlight();
+    }, 300); // Small delay to let the scroll happen first
   };
 
   const filteredCalculators = CALCULATORS.filter(calc => 
