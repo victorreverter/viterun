@@ -28,9 +28,12 @@ export function Header() {
 
                 <div className="flex items-center gap-4">
                     <div className="flex items-center gap-2 max-sm:hidden">
-                        <div className="px-3 py-1 bg-brand-surface rounded-lg border border-brand-surface-light flex items-center gap-2">
-                            <span className="w-2 h-2 rounded-full bg-brand-lime shadow-[0_0_8px_#CCFF00]"></span>
-                            <span className="text-xs font-mono text-gray-300">SYNCED WITH LOCAL STORAGE</span>
+                        <div className="flex flex-col items-end gap-1">
+                            <div className="px-3 py-1 bg-brand-surface rounded-lg border border-brand-surface-light flex items-center gap-2">
+                                <span className="w-2 h-2 rounded-full bg-brand-lime shadow-[0_0_8px_#CCFF00]"></span>
+                                <span className="text-xs font-mono text-gray-300">SYNCED WITH LOCAL STORAGE</span>
+                            </div>
+                            <span className="text-[10px] text-gray-500 font-medium">All data stays exclusively on your machine.</span>
                         </div>
                     </div>
 
