@@ -5,6 +5,7 @@ import { RacePredictor } from "@/components/calculators/RacePredictor";
 import { BodyFatCalculator } from "@/components/calculators/BodyFatCalculator";
 import { HRZoneGenerator } from "@/components/calculators/HRZoneGenerator";
 import { NextRaceWidget } from "@/components/dashboard/NextRaceWidget";
+import { PersonalRecordsWidget } from "@/components/dashboard/PersonalRecordsWidget";
 import { useSearchStore } from "@/store/useSearchStore";
 import { useUserStore } from "@/store/useUserStore";
 
@@ -38,18 +39,8 @@ export default function Home() {
         {/* Next Race Widget */}
         <NextRaceWidget />
 
-        {/* Weekly Volume Widget */}
-        <div className="bg-brand-surface border border-brand-surface-light hover:border-brand-lime/50 transition-colors rounded-2xl p-6 flex flex-col gap-4 shadow-lg shadow-black/20">
-            <h3 className="text-brand-lime font-mono text-sm tracking-wider flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_8px_#22d3ee]"></span>
-              WEEKLY VOLUME
-            </h3>
-            <div className="flex-1 flex flex-col justify-center py-4">
-                <div className="text-4xl font-bold text-white mb-2">0.0<span className="text-xl text-gray-500 ml-1">km</span></div>
-                <p className="text-gray-400 text-sm leading-relaxed">Log your first run to start analyzing your weekly mileage peak.</p>
-            </div>
-            <button className="w-full py-2 bg-brand-surface-light hover:bg-white/10 text-white rounded-lg text-sm font-medium transition-colors">Log Run</button>
-        </div>
+        {/* Personal Records Widget */}
+        <PersonalRecordsWidget />
 
         {/* Current Target Pace Widget */}
         <div className="bg-brand-surface border border-brand-surface-light hover:border-brand-lime/50 transition-colors rounded-2xl p-6 flex flex-col gap-4 shadow-lg shadow-black/20">
