@@ -85,21 +85,21 @@ export function RacePredictor() {
                         <div className="flex gap-2">
                             <button
                                 onClick={() => updateField("baselineDistance", 5)}
-                                className={`flex-1 py-2 rounded-xl text-sm font-medium transition-colors border ${baselineDistance === 5 ? "bg-brand-lime text-black border-brand-lime" : "bg-brand-midnight text-gray-400 border-brand-surface-light hover:text-white"
+                                className={`flex-1 py-2 rounded-xl text-sm font-medium transition-colors border ${baselineDistance === 5 ? "bg-brand-lime text-black border-brand-lime" : "bg-brand-midnight text-gray-400 border-brand-surface-light hover:text-foreground"
                                     }`}
                             >
                                 5K
                             </button>
                             <button
                                 onClick={() => updateField("baselineDistance", 10)}
-                                className={`flex-1 py-2 rounded-xl text-sm font-medium transition-colors border ${baselineDistance === 10 ? "bg-brand-lime text-black border-brand-lime" : "bg-brand-midnight text-gray-400 border-brand-surface-light hover:text-white"
+                                className={`flex-1 py-2 rounded-xl text-sm font-medium transition-colors border ${baselineDistance === 10 ? "bg-brand-lime text-black border-brand-lime" : "bg-brand-midnight text-gray-400 border-brand-surface-light hover:text-foreground"
                                     }`}
                             >
                                 10K
                             </button>
                             <button
                                 onClick={() => updateField("baselineDistance", 21.0975)}
-                                className={`flex-1 py-2 rounded-xl text-sm font-medium transition-colors border ${baselineDistance === 21.0975 ? "bg-brand-lime text-black border-brand-lime" : "bg-brand-midnight text-gray-400 border-brand-surface-light hover:text-white"
+                                className={`flex-1 py-2 rounded-xl text-sm font-medium transition-colors border ${baselineDistance === 21.0975 ? "bg-brand-lime text-black border-brand-lime" : "bg-brand-midnight text-gray-400 border-brand-surface-light hover:text-foreground"
                                     }`}
                             >
                                 Half
@@ -108,7 +108,7 @@ export function RacePredictor() {
                                 type="number"
                                 value={baselineDistance}
                                 onChange={(e) => updateField("baselineDistance", e.target.value ? parseFloat(e.target.value) : "")}
-                                className="w-20 bg-brand-midnight rounded-xl border border-brand-surface-light px-3 py-2 text-white outline-none focus:border-brand-lime text-center transition-colors"
+                                className="w-20 bg-brand-midnight rounded-xl border border-brand-surface-light px-3 py-2 text-foreground outline-none focus:border-brand-lime text-center transition-colors"
                                 placeholder="km"
                             />
                         </div>
@@ -121,7 +121,7 @@ export function RacePredictor() {
                                 type="number"
                                 value={hours}
                                 onChange={(e) => handleTimeChange("h", e.target.value)}
-                                className="w-1/3 bg-brand-midnight rounded-xl border border-brand-surface-light px-4 py-3 text-white outline-none text-center focus:border-brand-lime transition-colors"
+                                className="w-1/3 bg-brand-midnight rounded-xl border border-brand-surface-light px-4 py-3 text-foreground outline-none text-center focus:border-brand-lime transition-colors"
                                 placeholder="HH"
                             />
                             <span className="text-xl font-bold text-gray-600 flex items-center">:</span>
@@ -129,7 +129,7 @@ export function RacePredictor() {
                                 type="number"
                                 value={minutes}
                                 onChange={(e) => handleTimeChange("m", e.target.value)}
-                                className="w-1/3 bg-brand-midnight rounded-xl border border-brand-surface-light px-4 py-3 text-white outline-none text-center focus:border-brand-lime transition-colors"
+                                className="w-1/3 bg-brand-midnight rounded-xl border border-brand-surface-light px-4 py-3 text-foreground outline-none text-center focus:border-brand-lime transition-colors"
                                 placeholder="MM"
                             />
                             <span className="text-xl font-bold text-gray-600 flex items-center">:</span>
@@ -137,7 +137,7 @@ export function RacePredictor() {
                                 type="number"
                                 value={seconds}
                                 onChange={(e) => handleTimeChange("s", e.target.value)}
-                                className="w-1/3 bg-brand-midnight rounded-xl border border-brand-surface-light px-4 py-3 text-white outline-none text-center focus:border-brand-lime transition-colors"
+                                className="w-1/3 bg-brand-midnight rounded-xl border border-brand-surface-light px-4 py-3 text-foreground outline-none text-center focus:border-brand-lime transition-colors"
                                 placeholder="SS"
                             />
                         </div>
@@ -152,21 +152,21 @@ export function RacePredictor() {
                         {/* 5K row */}
                         {baselineDistance !== 5 && (
                             <div className={`flex items-center justify-between p-3 rounded-lg border border-transparent bg-brand-surface/50`}>
-                                <span className="text-sm font-bold text-gray-300">5K</span>
-                                <span className="text-lg font-bold tracking-tight text-white">{preds.p5k}</span>
+                                <span className="text-sm font-bold text-gray-500">5K</span>
+                                <span className="text-lg font-bold tracking-tight text-foreground">{preds.p5k}</span>
                             </div>
                         )}
 
                         {/* 10K Component row */}
                         <div className={`flex items-center justify-between p-3 rounded-lg border ${baselineDistance === 10 ? 'border-brand-lime/30 bg-brand-lime/5' : 'border-transparent bg-brand-surface/50'} `}>
-                            <span className="text-sm font-bold text-gray-300">10K</span>
-                            <span className="text-lg font-bold tracking-tight text-white">{preds.p10k}</span>
+                            <span className="text-sm font-bold text-gray-500">10K</span>
+                            <span className="text-lg font-bold tracking-tight text-foreground">{preds.p10k}</span>
                         </div>
 
                         {/* Half Marathon row */}
                         <div className={`flex items-center justify-between p-3 rounded-lg border ${baselineDistance === 21.0975 ? 'border-brand-lime/30 bg-brand-lime/5' : 'border-transparent bg-brand-surface/50'} `}>
-                            <span className="text-sm font-bold text-gray-300">Half Marathon</span>
-                            <span className="text-lg font-bold tracking-tight text-white">{preds.pHalf}</span>
+                            <span className="text-sm font-bold text-gray-500">Half Marathon</span>
+                            <span className="text-lg font-bold tracking-tight text-foreground">{preds.pHalf}</span>
                         </div>
 
                         {/* Full Marathon row (Highlighted) */}

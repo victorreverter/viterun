@@ -34,7 +34,7 @@ export default function Home() {
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
       <div>
-        <h1 className="text-3xl font-bold tracking-tighter text-white">Runner Profile</h1>
+        <h1 className="text-3xl font-bold tracking-tighter text-foreground">Runner Profile</h1>
         <p className="text-gray-400 mt-2">Welcome to your mission control. Your PRs, saved stats, and logs will appear here.</p>
       </div>
 
@@ -52,7 +52,7 @@ export default function Home() {
               TARGET PACE
             </h3>
             <div className="flex-1 flex flex-col justify-center py-4">
-                <div className="text-4xl font-bold text-white mb-2">
+                <div className="text-4xl font-bold text-foreground mb-2">
                     {targetPace ? targetPace.split("/")[0] : "--:--"}
                     <span className="text-xl text-gray-500 ml-1">
                         /{targetPace ? targetPace.split("/")[1] : "km"}
@@ -64,7 +64,7 @@ export default function Home() {
             </div>
             <button 
                 onClick={handleScrollToPaceCalc}
-                className="w-full py-2 bg-brand-surface-light hover:bg-white/10 text-white rounded-lg text-sm font-medium transition-colors"
+                className="w-full py-2 bg-brand-surface-light hover:bg-brand-surface-light/80 text-foreground rounded-lg text-sm font-medium transition-colors"
             >
                 {targetPace ? "Update Pace" : "Calculate Pace"}
             </button>
@@ -72,7 +72,7 @@ export default function Home() {
       </div>
 
       <div className="pt-8 border-t border-brand-surface-light">
-        <h2 className="text-2xl font-bold text-white mb-6">Explore Tools</h2>
+        <h2 className="text-2xl font-bold text-foreground mb-6">Explore Tools</h2>
         
         {filteredCalculators.length === 0 ? (
             <div className="col-span-1 lg:col-span-3 p-12 flex flex-col items-center justify-center text-center bg-brand-surface rounded-2xl border border-brand-surface-light border-dashed">

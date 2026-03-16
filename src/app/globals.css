@@ -1,21 +1,37 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-brand-midnight: #0A0A0A;
-  --color-brand-lime: #CCFF00;
-  --color-brand-surface: #1A1A1A;
-  --color-brand-surface-light: #2A2A2A;
+  --color-brand-midnight: var(--theme-midnight);
+  --color-brand-lime: var(--theme-lime);
+  --color-brand-surface: var(--theme-surface);
+  --color-brand-surface-light: var(--theme-surface-light);
 
-  --color-background: var(--color-brand-midnight);
-  --color-foreground: #ffffff;
+  --color-background: var(--theme-midnight);
+  --color-foreground: var(--theme-foreground);
 
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
 :root {
-  --background: var(--color-brand-midnight);
-  --foreground: #ffffff;
+  /* Default Light Mode Colors */
+  --theme-midnight: #F9FAFB; /* Base light background */
+  --theme-lime: #16A34A; /* Racing green for better contrast in light mode */
+  --theme-surface: #FFFFFF; /* High contrast card surfaces */
+  --theme-surface-light: #E5E7EB; /* Subtle borders and hovers */
+  --theme-foreground: #111827; /* Dark text */
+
+  --background: var(--color-background);
+  --foreground: var(--color-foreground);
+}
+
+.dark {
+  /* Original ViteRun Dark Mode Colors */
+  --theme-midnight: #0A0A0A;
+  --theme-lime: #CCFF00;
+  --theme-surface: #1A1A1A;
+  --theme-surface-light: #2A2A2A;
+  --theme-foreground: #ffffff;
 }
 
 body {

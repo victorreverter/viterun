@@ -63,14 +63,14 @@ export function BodyFatCalculator() {
                 <div className="flex bg-brand-midnight rounded-xl p-1 border border-brand-surface-light w-full">
                     <button
                         onClick={() => updateField("gender", "male")}
-                        className={`flex-1 py-1.5 rounded-lg text-sm font-medium transition-colors ${gender === "male" ? "bg-brand-lime text-black" : "text-gray-400 hover:text-white"
+                        className={`flex-1 py-1.5 rounded-lg text-sm font-medium transition-colors ${gender === "male" ? "bg-brand-lime text-black" : "text-gray-400 hover:text-foreground"
                             }`}
                     >
                         Male
                     </button>
                     <button
                         onClick={() => updateField("gender", "female")}
-                        className={`flex-1 py-1.5 rounded-lg text-sm font-medium transition-colors ${gender === "female" ? "bg-brand-lime text-black" : "text-gray-400 hover:text-white"
+                        className={`flex-1 py-1.5 rounded-lg text-sm font-medium transition-colors ${gender === "female" ? "bg-brand-lime text-black" : "text-gray-400 hover:text-foreground"
                             }`}
                     >
                         Female
@@ -84,7 +84,7 @@ export function BodyFatCalculator() {
                             type="number"
                             value={weight}
                             onChange={(e) => updateField("weight", e.target.value ? parseFloat(e.target.value) : "")}
-                            className="w-full bg-brand-midnight rounded-xl border border-brand-surface-light px-3 py-2 text-white outline-none focus:border-brand-lime transition-colors"
+                            className="w-full bg-brand-midnight rounded-xl border border-brand-surface-light px-3 py-2 text-foreground outline-none focus:border-brand-lime transition-colors"
                             placeholder="e.g. 70"
                         />
                     </div>
@@ -94,7 +94,7 @@ export function BodyFatCalculator() {
                             type="number"
                             value={height}
                             onChange={(e) => updateField("height", e.target.value ? parseFloat(e.target.value) : "")}
-                            className="w-full bg-brand-midnight rounded-xl border border-brand-surface-light px-3 py-2 text-white outline-none focus:border-brand-lime transition-colors"
+                            className="w-full bg-brand-midnight rounded-xl border border-brand-surface-light px-3 py-2 text-foreground outline-none focus:border-brand-lime transition-colors"
                         />
                     </div>
                     <div>
@@ -103,7 +103,7 @@ export function BodyFatCalculator() {
                             type="number"
                             value={neck}
                             onChange={(e) => updateField("neck", e.target.value ? parseFloat(e.target.value) : "")}
-                            className="w-full bg-brand-midnight rounded-xl border border-brand-surface-light px-3 py-2 text-white outline-none focus:border-brand-lime transition-colors"
+                            className="w-full bg-brand-midnight rounded-xl border border-brand-surface-light px-3 py-2 text-foreground outline-none focus:border-brand-lime transition-colors"
                         />
                     </div>
                     <div>
@@ -112,7 +112,7 @@ export function BodyFatCalculator() {
                             type="number"
                             value={waist}
                             onChange={(e) => updateField("waist", e.target.value ? parseFloat(e.target.value) : "")}
-                            className="w-full bg-brand-midnight rounded-xl border border-brand-surface-light px-3 py-2 text-white outline-none focus:border-brand-lime transition-colors"
+                            className="w-full bg-brand-midnight rounded-xl border border-brand-surface-light px-3 py-2 text-foreground outline-none focus:border-brand-lime transition-colors"
                         />
                     </div>
 
@@ -123,7 +123,7 @@ export function BodyFatCalculator() {
                                 type="number"
                                 value={hips}
                                 onChange={(e) => updateField("hips", e.target.value ? parseFloat(e.target.value) : "")}
-                                className="w-full bg-brand-midnight rounded-xl border border-brand-surface-light px-3 py-2 text-white outline-none focus:border-brand-lime transition-colors"
+                                className="w-full bg-brand-midnight rounded-xl border border-brand-surface-light px-3 py-2 text-foreground outline-none focus:border-brand-lime transition-colors"
                             />
                         </div>
                     )}
@@ -134,7 +134,7 @@ export function BodyFatCalculator() {
                     <div className="flex flex-col items-center justify-center p-3 bg-brand-midnight rounded-xl border border-brand-surface-light">
                         <span className="text-xs text-gray-400 font-medium uppercase tracking-wider mb-1">BMI</span>
                         <div className="flex items-baseline gap-1">
-                            <span className="text-2xl font-bold tracking-tighter text-white">{bmi}</span>
+                            <span className="text-2xl font-bold tracking-tighter text-foreground">{bmi}</span>
                         </div>
                     </div>
 

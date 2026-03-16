@@ -17,7 +17,7 @@ export function Sidebar() {
             <div className="p-6">
                 <Link href="/" className="flex items-center gap-3">
                     <Medal className="w-8 h-8 text-brand-lime" />
-                    <span className="text-2xl font-bold tracking-tighter text-white">Vite<span className="text-cyber">Run</span></span>
+                    <span className="text-2xl font-bold tracking-tighter text-foreground">Vite<span className="text-cyber">Run</span></span>
                 </Link>
             </div>
 
@@ -33,7 +33,7 @@ export function Sidebar() {
                                 "flex items-center gap-3 px-4 py-3 rounded-xl transition-colors font-medium",
                                 isActive 
                                     ? "bg-brand-surface-light text-brand-lime" 
-                                    : "text-gray-400 hover:text-white hover:bg-brand-surface-light"
+                                    : "text-gray-400 hover:text-foreground hover:bg-brand-surface-light"
                             )}
                         >
                             <Icon className="w-5 h-5" />

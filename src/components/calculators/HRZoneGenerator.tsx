@@ -63,7 +63,7 @@ export function HRZoneGenerator() {
                             type="number"
                             value={age}
                             onChange={(e) => updateField("age", e.target.value ? parseFloat(e.target.value) : "")}
-                            className="w-full bg-brand-midnight rounded-xl border border-brand-surface-light px-4 py-2.5 text-white outline-none focus:border-brand-lime transition-colors"
+                            className="w-full bg-brand-midnight rounded-xl border border-brand-surface-light px-4 py-2.5 text-foreground outline-none focus:border-brand-lime transition-colors"
                             placeholder="Years"
                         />
                     </div>
@@ -73,7 +73,7 @@ export function HRZoneGenerator() {
                             type="number"
                             value={restingHR}
                             onChange={(e) => updateField("restingHR", e.target.value ? parseFloat(e.target.value) : "")}
-                            className="w-full bg-brand-midnight rounded-xl border border-brand-surface-light px-4 py-2.5 text-white outline-none focus:border-red-400 transition-colors"
+                            className="w-full bg-brand-midnight rounded-xl border border-brand-surface-light px-4 py-2.5 text-foreground outline-none focus:border-red-400 transition-colors"
                             placeholder="bpm"
                         />
                     </div>
@@ -82,7 +82,7 @@ export function HRZoneGenerator() {
                             <label className="block text-sm font-medium text-gray-400">Max HR</label>
                             <button
                                 onClick={() => setUseCustomMax(!useCustomMax)}
-                                className="text-[10px] text-gray-500 hover:text-white uppercase font-bold tracking-wider"
+                                className="text-[10px] text-gray-500 hover:text-foreground uppercase font-bold tracking-wider"
                             >
                                 {useCustomMax ? "Use Age Formula" : "Enter Custom"}
                             </button>
@@ -93,7 +93,7 @@ export function HRZoneGenerator() {
                                 type="number"
                                 value={maxHR}
                                 onChange={(e) => updateField("maxHR", e.target.value ? parseFloat(e.target.value) : "")}
-                                className="w-full bg-brand-midnight rounded-xl border border-brand-surface-light px-4 py-2.5 text-white outline-none focus:border-red-400 transition-colors"
+                                className="w-full bg-brand-midnight rounded-xl border border-brand-surface-light px-4 py-2.5 text-foreground outline-none focus:border-red-400 transition-colors"
                                 placeholder="Max bpm"
                             />
                         ) : (

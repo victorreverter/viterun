@@ -110,14 +110,14 @@ export function PaceCalculator() {
                 <div className="flex bg-brand-midnight rounded-xl p-1 border border-brand-surface-light">
                     <button
                         onClick={() => setActiveTab("pace")}
-                        className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${activeTab === "pace" ? "bg-brand-lime text-black" : "text-gray-400 hover:text-white"
+                        className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${activeTab === "pace" ? "bg-brand-lime text-black" : "text-gray-400 hover:text-foreground"
                             }`}
                     >
                         Find Pace
                     </button>
                     <button
                         onClick={() => setActiveTab("time")}
-                        className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${activeTab === "time" ? "bg-brand-lime text-black" : "text-gray-400 hover:text-white"
+                        className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${activeTab === "time" ? "bg-brand-lime text-black" : "text-gray-400 hover:text-foreground"
                             }`}
                     >
                         Find Time
@@ -133,20 +133,20 @@ export function PaceCalculator() {
                             type="number"
                             value={distance}
                             onChange={(e) => setDistance(e.target.value)}
-                            className="flex-1 bg-transparent px-3 py-2 text-white outline-none"
+                            className="flex-1 bg-transparent px-3 py-2 text-foreground outline-none"
                             placeholder="e.g. 10"
                         />
                         <div className="flex bg-brand-surface rounded-lg p-1">
                             <button
                                 onClick={() => setUnit("km")}
-                                className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${unit === "km" ? "bg-brand-surface-light text-white" : "text-gray-400 hover:text-white"
+                                className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${unit === "km" ? "bg-brand-surface-light text-foreground" : "text-gray-400 hover:text-foreground"
                                     }`}
                             >
                                 km
                             </button>
                             <button
                                 onClick={() => setUnit("mi")}
-                                className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${unit === "mi" ? "bg-brand-surface-light text-white" : "text-gray-400 hover:text-white"
+                                className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${unit === "mi" ? "bg-brand-surface-light text-foreground" : "text-gray-400 hover:text-foreground"
                                     }`}
                             >
                                 mi
@@ -163,7 +163,7 @@ export function PaceCalculator() {
                                 type="number"
                                 value={hours}
                                 onChange={(e) => setHours(e.target.value)}
-                                className="w-1/3 bg-brand-midnight rounded-xl border border-brand-surface-light px-4 py-3 text-white outline-none text-center focus:border-brand-lime transition-colors"
+                                className="w-1/3 bg-brand-midnight rounded-xl border border-brand-surface-light px-4 py-3 text-foreground outline-none text-center focus:border-brand-lime transition-colors"
                                 placeholder="HH"
                             />
                             <span className="text-xl font-bold text-gray-600 flex items-center">:</span>
@@ -171,7 +171,7 @@ export function PaceCalculator() {
                                 type="number"
                                 value={minutes}
                                 onChange={(e) => setMinutes(e.target.value)}
-                                className="w-1/3 bg-brand-midnight rounded-xl border border-brand-surface-light px-4 py-3 text-white outline-none text-center focus:border-brand-lime transition-colors"
+                                className="w-1/3 bg-brand-midnight rounded-xl border border-brand-surface-light px-4 py-3 text-foreground outline-none text-center focus:border-brand-lime transition-colors"
                                 placeholder="MM"
                             />
                             <span className="text-xl font-bold text-gray-600 flex items-center">:</span>
@@ -179,7 +179,7 @@ export function PaceCalculator() {
                                 type="number"
                                 value={seconds}
                                 onChange={(e) => setSeconds(e.target.value)}
-                                className="w-1/3 bg-brand-midnight rounded-xl border border-brand-surface-light px-4 py-3 text-white outline-none text-center focus:border-brand-lime transition-colors"
+                                className="w-1/3 bg-brand-midnight rounded-xl border border-brand-surface-light px-4 py-3 text-foreground outline-none text-center focus:border-brand-lime transition-colors"
                                 placeholder="SS"
                             />
                         </div>
@@ -226,7 +226,7 @@ export function PaceCalculator() {
                                 type="number"
                                 value={paceMinutes}
                                 onChange={(e) => setPaceMinutes(e.target.value)}
-                                className="w-20 bg-transparent px-3 py-2 text-white outline-none text-right"
+                                className="w-20 bg-transparent px-3 py-2 text-foreground outline-none text-right"
                                 placeholder="MM"
                             />
                             <span className="text-xl font-bold text-gray-600 flex items-baseline pt-1">:</span>
@@ -234,21 +234,21 @@ export function PaceCalculator() {
                                 type="number"
                                 value={paceSeconds}
                                 onChange={(e) => setPaceSeconds(e.target.value)}
-                                className="w-20 bg-transparent px-3 py-2 text-white outline-none text-left"
+                                className="w-20 bg-transparent px-3 py-2 text-foreground outline-none text-left"
                                 placeholder="SS"
                             />
                             <div className="flex-1 flex justify-end">
                                 <div className="flex bg-brand-surface rounded-lg p-1">
                                     <button
                                         onClick={() => setPaceUnit("km")}
-                                        className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${paceUnit === "km" ? "bg-brand-surface-light text-white" : "text-gray-400 hover:text-white"
+                                        className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${paceUnit === "km" ? "bg-brand-surface-light text-foreground" : "text-gray-400 hover:text-foreground"
                                             }`}
                                     >
                                         /km
                                     </button>
                                     <button
                                         onClick={() => setPaceUnit("mi")}
-                                        className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${paceUnit === "mi" ? "bg-brand-surface-light text-white" : "text-gray-400 hover:text-white"
+                                        className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${paceUnit === "mi" ? "bg-brand-surface-light text-foreground" : "text-gray-400 hover:text-foreground"
                                             }`}
                                     >
                                         /mi
@@ -268,7 +268,7 @@ export function PaceCalculator() {
                                     const s = parseInt(paceSeconds) || 0;
                                     handleSavePace(`${m}:${s.toString().padStart(2, "0")}/${paceUnit}`);
                                 }}
-                                className="w-full py-3 bg-brand-surface-light hover:bg-white/10 text-white rounded-xl text-sm font-medium transition-colors border border-brand-surface-light flex items-center justify-center gap-2"
+                                className="w-full py-3 bg-brand-surface-light hover:bg-brand-surface-light/80 text-foreground rounded-xl text-sm font-medium transition-colors border border-brand-surface-light flex items-center justify-center gap-2"
                             >
                                 {savedPace ? (
                                     <><Check className="w-4 h-4 text-brand-lime" /> Saved to Target Pace</>

@@ -111,7 +111,7 @@ export function PersonalRecordsWidget() {
                     <div className="flex gap-2">
                         <button 
                             onClick={handleCancel}
-                            className="text-gray-400 hover:text-white transition-colors text-xs font-medium"
+                            className="text-gray-400 hover:text-foreground transition-colors text-xs font-medium"
                         >
                             Cancel
                         </button>
@@ -150,7 +150,7 @@ export function PersonalRecordsWidget() {
                                     value={editRecords[key].h}
                                     onChange={(e) => setEditRecords(prev => ({ ...prev, [key]: { ...prev[key], h: e.target.value } }))}
                                     placeholder="hh"
-                                    className="w-8 bg-brand-midnight/50 border border-brand-surface-light rounded-md px-1 py-1 text-center text-xs text-white font-mono outline-none focus:border-brand-lime transition-colors"
+                                    className="w-8 bg-brand-midnight/50 dark:bg-brand-midnight/50 border border-brand-surface-light rounded-md px-1 py-1 text-center text-xs text-foreground font-mono outline-none focus:border-brand-lime transition-colors"
                                 />
                                 <span className="text-gray-600 font-bold">:</span>
                                 <input
@@ -158,7 +158,7 @@ export function PersonalRecordsWidget() {
                                     value={editRecords[key].m}
                                     onChange={(e) => setEditRecords(prev => ({ ...prev, [key]: { ...prev[key], m: e.target.value } }))}
                                     placeholder="mm"
-                                    className="w-8 bg-brand-midnight/50 border border-brand-surface-light rounded-md px-1 py-1 text-center text-xs text-white font-mono outline-none focus:border-brand-lime transition-colors"
+                                    className="w-8 bg-brand-midnight/50 dark:bg-brand-midnight/50 border border-brand-surface-light rounded-md px-1 py-1 text-center text-xs text-foreground font-mono outline-none focus:border-brand-lime transition-colors"
                                 />
                                 <span className="text-gray-600 font-bold">:</span>
                                 <input
@@ -166,7 +166,7 @@ export function PersonalRecordsWidget() {
                                     value={editRecords[key].s}
                                     onChange={(e) => setEditRecords(prev => ({ ...prev, [key]: { ...prev[key], s: e.target.value } }))}
                                     placeholder="ss"
-                                    className="w-8 bg-brand-midnight/50 border border-brand-surface-light rounded-md px-1 py-1 text-center text-xs text-white font-mono outline-none focus:border-brand-lime transition-colors"
+                                    className="w-8 bg-brand-midnight/50 dark:bg-brand-midnight/50 border border-brand-surface-light rounded-md px-1 py-1 text-center text-xs text-foreground font-mono outline-none focus:border-brand-lime transition-colors"
                                 />
                             </div>
                         ) : (
@@ -191,7 +191,7 @@ export function PersonalRecordsWidget() {
 
                                     return (
                                         <>
-                                            <span className={`text-sm tracking-tight font-semibold min-w-[60px] text-right ${currentStr ? 'text-white font-mono' : 'text-gray-500 italic'}`}>
+                                            <span className={`text-sm tracking-tight font-semibold min-w-[60px] text-right ${currentStr ? 'text-foreground font-mono' : 'text-gray-500 italic'}`}>
                                                 {currentStr || "Not set"}
                                             </span>
                                             {diffElement}

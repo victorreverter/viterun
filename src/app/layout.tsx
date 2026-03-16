@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { Header } from "@/components/layout/Header";
+import { ThemeProvider } from "@/components/ThemeProvider";
 
 const fontSans = Geist({
   variable: "--font-geist-sans",
@@ -25,10 +26,34 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              try {
+                let isDark = true;
+                const storage = localStorage.getItem('viterun-user-storage');
+                if (storage) {
+                  const parsed = JSON.parse(storage);
+                  if (parsed.state && parsed.state.theme) {
+                    isDark = parsed.state.theme === 'dark';
+                  }
+                }
+                if (isDark) {
+                  document.documentElement.classList.add('dark');
+                } else {
+                  document.documentElement.classList.remove('dark');
+                }
+              } catch (e) {}
+            `,
+          }}
+        />
+      </head>
       <body
-        className={`${fontSans.variable} ${fontMono.variable} antialiased bg-brand-midnight text-white min-h-screen flex`}
+        className={`${fontSans.variable} ${fontMono.variable} antialiased bg-background text-foreground min-h-screen flex transition-colors duration-300`}
       >
+        <ThemeProvider />
         <Sidebar />
         <div className="flex-1 flex flex-col lg:ml-64 min-w-0">
           <Header />

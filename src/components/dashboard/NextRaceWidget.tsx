@@ -45,7 +45,7 @@ export function NextRaceWidget() {
                         value={nextRaceName}
                         onChange={(e) => updateField("nextRaceName", e.target.value)}
                         placeholder="Race Name (e.g. Valencia)"
-                        className="w-full bg-brand-midnight/50 hover:bg-brand-midnight rounded-xl border border-brand-surface-light px-3 py-2.5 pl-10 text-white text-sm outline-none focus:border-brand-lime transition-all"
+                        className="w-full bg-brand-midnight/50 hover:bg-brand-midnight rounded-xl border border-brand-surface-light px-3 py-2.5 pl-10 text-foreground text-sm outline-none focus:border-brand-lime transition-all"
                     />
                 </div>
                 
@@ -69,7 +69,7 @@ export function NextRaceWidget() {
                         </>
                     ) : (
                         <>
-                            <div className="text-5xl font-bold text-white mb-0 font-mono tabular-nums tracking-tighter leading-none">
+                            <div className="text-5xl font-bold text-foreground mb-0 font-mono tabular-nums tracking-tighter leading-none">
                                 {daysRemaining}
                                 <span className="text-2xl text-gray-500 ml-2 font-sans tracking-normal">days</span>
                             </div>

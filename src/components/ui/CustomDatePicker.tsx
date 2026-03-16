@@ -68,22 +68,22 @@ export function CustomDatePicker({ value, onChange }: CustomDatePickerProps) {
             <button
                 type="button"
                 onClick={() => setIsOpen(!isOpen)}
-                className={`w-full bg-brand-midnight/50 hover:bg-brand-midnight rounded-xl border px-3 py-2.5 pl-10 text-sm outline-none transition-all text-left ${isOpen ? 'border-brand-lime text-white' : 'border-brand-surface-light text-gray-300'}`}
+                className={`w-full bg-brand-midnight/50 hover:bg-brand-midnight rounded-xl border px-3 py-2.5 pl-10 text-sm outline-none transition-all text-left ${isOpen ? 'border-brand-lime text-foreground' : 'border-brand-surface-light text-gray-400'}`}
             >
                 {displayValue}
             </button>
 
             {isOpen && (
-                <div className="absolute top-full left-0 mt-2 w-full min-w-[300px] z-[99] bg-[#111116] border border-brand-surface-light rounded-2xl shadow-2xl p-4 animate-in fade-in slide-in-from-top-2">
+                <div className="absolute top-full left-0 mt-2 w-full min-w-[300px] z-[99] bg-brand-surface border border-brand-surface-light rounded-2xl shadow-2xl p-4 animate-in fade-in slide-in-from-top-2">
                     {/* Header */}
                     <div className="flex justify-between items-center mb-4">
-                        <button onClick={handlePrevMonth} className="p-1 hover:bg-brand-surface-light rounded-lg text-gray-400 hover:text-white transition-colors">
+                        <button onClick={handlePrevMonth} className="p-1 hover:bg-brand-surface-light rounded-lg text-gray-400 hover:text-foreground transition-colors">
                             <ChevronLeft className="w-5 h-5" />
                         </button>
-                        <div className="text-white font-medium text-sm">
+                        <div className="text-foreground font-medium text-sm">
                             {monthNames[currentMonth.getMonth()]} {currentMonth.getFullYear()}
                         </div>
-                        <button onClick={handleNextMonth} className="p-1 hover:bg-brand-surface-light rounded-lg text-gray-400 hover:text-white transition-colors">
+                        <button onClick={handleNextMonth} className="p-1 hover:bg-brand-surface-light rounded-lg text-gray-400 hover:text-foreground transition-colors">
                             <ChevronRight className="w-5 h-5" />
                         </button>
                     </div>
@@ -110,7 +110,7 @@ export function CustomDatePicker({ value, onChange }: CustomDatePickerProps) {
                                         p-2 rounded-lg text-sm w-full h-full aspect-square flex items-center justify-center transition-all
                                         ${selected 
                                             ? 'bg-brand-lime text-black font-bold shadow-[0_0_12px_rgba(204,255,0,0.5)]' 
-                                            : 'text-gray-300 hover:bg-brand-surface-light hover:text-white'}
+                                            : 'text-gray-400 hover:bg-brand-surface-light hover:text-foreground'}
                                     `}
                                 >
                                     {day}
