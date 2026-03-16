@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useUserStore } from "@/store/useUserStore";
-import { TrendingUp } from "lucide-react";
+import { TrendingUp, ChevronDown, ChevronUp } from "lucide-react";
 
 export function RacePredictor() {
     const { baselineDistance, baselineTime, updateField } = useUserStore();
@@ -10,6 +10,7 @@ export function RacePredictor() {
     const [hours, setHours] = useState(() => Math.floor(Number(baselineTime || 0) / 60).toString());
     const [minutes, setMinutes] = useState(() => Math.floor(Number(baselineTime || 0) % 60).toString());
     const [seconds, setSeconds] = useState(() => Math.round((Number(baselineTime || 0) * 60) % 60).toString());
+    const [expandedDistance, setExpandedDistance] = useState<number | null>(null);
 
     const handleTimeChange = (type: "h" | "m" | "s", value: string) => {
         let newH = parseInt(hours) || 0;
@@ -60,6 +61,50 @@ export function RacePredictor() {
     };
 
     const preds = calculatePredictions();
+
+    const getSplitMilestones = (distance: number) => {
+        if (distance === 5) return [1, 2, 3, 4, 5];
+        if (distance === 10) return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        if (distance === 21.0975) return [1, 5, 10, 15, 21];
+        if (distance === 42.195) return [1, 5, 10, 15, 21.0975, 25, 30, 35, 42.195];
+        return [];
+    };
+
+    const formatSplitTime = (totalMins: number) => {
+        const h = Math.floor(totalMins / 60);
+        const m = Math.floor(totalMins % 60);
+        const s = Math.floor((totalMins * 60) % 60);
+        if (h > 0) return `${h}:${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
+        return `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
+    };
+
+    const renderPacingBand = (distance: number, totalMins: string) => {
+        const timeParts = totalMins.split(":");
+        let mins = 0;
+        if (timeParts.length === 3) {
+            mins = parseInt(timeParts[0]) * 60 + parseInt(timeParts[1]) + parseInt(timeParts[2]) / 60;
+        } else if (timeParts.length === 2) {
+            mins = parseInt(timeParts[0]) + parseInt(timeParts[1]) / 60;
+        }
+
+        if (!mins) return null;
+
+        const milestones = getSplitMilestones(distance);
+        return (
+            <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 animate-in slide-in-from-top-2 duration-300">
+                {milestones.map((km) => {
+                    const splitMins = (mins / distance) * km;
+                    const label = km === 21.0975 ? "Half" : km === 42.195 ? "Marathon" : km === 21 ? "21K" : `${km}K`;
+                    return (
+                        <div key={km} className="bg-brand-surface-light/30 border border-brand-surface-light rounded-lg p-2 flex flex-col items-center">
+                            <span className="text-[10px] uppercase font-bold text-gray-500">{label}</span>
+                            <span className="text-sm font-mono font-bold text-foreground">{formatSplitTime(splitMins)}</span>
+                        </div>
+                    );
+                })}
+            </div>
+        );
+    };
 
     return (
         <div className="bg-brand-surface rounded-2xl border border-brand-surface-light p-6 overflow-hidden relative md:col-span-2">
@@ -151,33 +196,71 @@ export function RacePredictor() {
                     <div className="space-y-3">
                         {/* 5K row */}
                         {baselineDistance !== 5 && (
-                            <div className={`flex items-center justify-between p-3 rounded-lg border border-transparent bg-brand-surface/50`}>
-                                <span className="text-sm font-bold text-gray-500">5K</span>
-                                <span className="text-lg font-bold tracking-tight text-foreground">{preds.p5k}</span>
+                            <div className="flex flex-col">
+                                <button 
+                                    onClick={() => setExpandedDistance(expandedDistance === 5 ? null : 5)}
+                                    className={`w-full flex items-center justify-between p-3 rounded-lg border transition-all ${expandedDistance === 5 ? 'border-brand-lime/30 bg-brand-lime/5' : 'border-transparent bg-brand-surface/50 hover:border-brand-surface-light'}`}
+                                >
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-sm font-bold text-gray-500">5K</span>
+                                        {expandedDistance === 5 ? <ChevronUp className="w-3 h-3 text-gray-500" /> : <ChevronDown className="w-3 h-3 text-gray-500" />}
+                                    </div>
+                                    <span className="text-lg font-bold tracking-tight text-foreground">{preds.p5k}</span>
+                                </button>
+                                {expandedDistance === 5 && renderPacingBand(5, preds.p5k)}
                             </div>
                         )}
 
                         {/* 10K Component row */}
-                        <div className={`flex items-center justify-between p-3 rounded-lg border ${baselineDistance === 10 ? 'border-brand-lime/30 bg-brand-lime/5' : 'border-transparent bg-brand-surface/50'} `}>
-                            <span className="text-sm font-bold text-gray-500">10K</span>
-                            <span className="text-lg font-bold tracking-tight text-foreground">{preds.p10k}</span>
+                        <div className="flex flex-col">
+                            <button 
+                                onClick={() => setExpandedDistance(expandedDistance === 10 ? null : 10)}
+                                className={`w-full flex items-center justify-between p-3 rounded-lg border transition-all ${expandedDistance === 10 ? 'border-brand-lime/30 bg-brand-lime/5' : 'border-transparent bg-brand-surface/50 hover:border-brand-surface-light'}`}
+                            >
+                                <div className="flex items-center gap-2">
+                                    <span className="text-sm font-bold text-gray-500">10K</span>
+                                    {expandedDistance === 10 ? <ChevronUp className="w-3 h-3 text-gray-500" /> : <ChevronDown className="w-3 h-3 text-gray-500" />}
+                                </div>
+                                <span className="text-lg font-bold tracking-tight text-foreground">{preds.p10k}</span>
+                            </button>
+                            {expandedDistance === 10 && renderPacingBand(10, preds.p10k)}
                         </div>
 
                         {/* Half Marathon row */}
-                        <div className={`flex items-center justify-between p-3 rounded-lg border ${baselineDistance === 21.0975 ? 'border-brand-lime/30 bg-brand-lime/5' : 'border-transparent bg-brand-surface/50'} `}>
-                            <span className="text-sm font-bold text-gray-500">Half Marathon</span>
-                            <span className="text-lg font-bold tracking-tight text-foreground">{preds.pHalf}</span>
+                        <div className="flex flex-col">
+                            <button 
+                                onClick={() => setExpandedDistance(expandedDistance === 21.0975 ? null : 21.0975)}
+                                className={`w-full flex items-center justify-between p-3 rounded-lg border transition-all ${expandedDistance === 21.0975 ? 'border-brand-lime/30 bg-brand-lime/5' : 'border-transparent bg-brand-surface/50 hover:border-brand-surface-light'}`}
+                            >
+                                <div className="flex items-center gap-2">
+                                    <span className="text-sm font-bold text-gray-500">Half Marathon</span>
+                                    {expandedDistance === 21.0975 ? <ChevronUp className="w-3 h-3 text-gray-500" /> : <ChevronDown className="w-3 h-3 text-gray-500" />}
+                                </div>
+                                <span className="text-lg font-bold tracking-tight text-foreground">{preds.pHalf}</span>
+                            </button>
+                            {expandedDistance === 21.0975 && renderPacingBand(21.0975, preds.pHalf)}
                         </div>
 
                         {/* Full Marathon row (Highlighted) */}
-                        <div className="flex items-center justify-between p-4 rounded-lg bg-brand-surface border border-brand-lime/20 relative overflow-hidden group hover:border-brand-lime/60 transition-colors">
-                            <div className="absolute inset-0 bg-brand-lime/5 opacity-50"></div>
-                            <span className="text-base font-bold text-brand-lime z-10 flex items-center gap-2">
-                                Marathon <span className="text-[10px] bg-brand-lime/20 text-brand-lime px-2 py-0.5 rounded-full uppercase">Goal</span>
-                            </span>
-                            <span className="text-2xl font-black tracking-tighter text-brand-lime drop-shadow-[0_0_10px_rgba(204,255,0,0.2)] z-10">
-                                {preds.pFull}
-                            </span>
+                        <div className="flex flex-col">
+                            <button 
+                                onClick={() => setExpandedDistance(expandedDistance === 42.195 ? null : 42.195)}
+                                className={`w-full flex flex-col p-4 rounded-lg bg-brand-surface border relative overflow-hidden group transition-all ${expandedDistance === 42.195 ? 'border-brand-lime/60 shadow-[0_0_15px_rgba(204,255,0,0.1)]' : 'border-brand-lime/20 hover:border-brand-lime/40'}`}
+                            >
+                                <div className="absolute inset-0 bg-brand-lime/5 opacity-50"></div>
+                                <div className="flex items-center justify-between w-full z-10">
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-base font-bold text-brand-lime flex items-center gap-2">
+                                            Marathon <span className="text-[10px] bg-brand-lime/20 text-brand-lime px-2 py-0.5 rounded-full uppercase">Goal</span>
+                                        </span>
+                                        {expandedDistance === 42.195 ? <ChevronUp className="w-4 h-4 text-brand-lime" /> : <ChevronDown className="w-4 h-4 text-brand-lime" />}
+                                    </div>
+                                    <span className="text-2xl font-black tracking-tighter text-brand-lime drop-shadow-[0_0_10px_rgba(204,255,0,0.2)]">
+                                        {preds.pFull}
+                                    </span>
+                                </div>
+                            </button>
+                            {expandedDistance === 42.195 && renderPacingBand(42.195, preds.pFull)}
                         </div>
                     </div>
                 </div>
