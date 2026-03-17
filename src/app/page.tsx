@@ -6,6 +6,7 @@ import { BodyFatCalculator } from "@/components/calculators/BodyFatCalculator";
 import { HRZoneGenerator } from "@/components/calculators/HRZoneGenerator";
 import { NextRaceWidget } from "@/components/dashboard/NextRaceWidget";
 import { PersonalRecordsWidget } from "@/components/dashboard/PersonalRecordsWidget";
+import { StravaWidget } from "@/components/dashboard/StravaWidget";
 import { useSearchStore } from "@/store/useSearchStore";
 import { useUserStore } from "@/store/useUserStore";
 
@@ -44,6 +45,9 @@ export default function Home() {
 
         {/* Personal Records Widget */}
         <PersonalRecordsWidget />
+
+        {/* Strava Integration Widget */}
+        <StravaWidget />
 
         {/* Current Target Pace Widget */}
         <div className="bg-brand-surface border border-brand-surface-light hover:border-brand-lime/50 transition-colors rounded-2xl p-6 flex flex-col gap-4 shadow-lg shadow-black/20">

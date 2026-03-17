@@ -38,10 +38,36 @@ export interface UserState {
         "marathon": { current: string; previous: string };
     };
 
-    updateField: (field: keyof Omit<UserState, 'updateField' | 'triggerPaceHighlight'>, value: number | string | boolean) => void;
+    // ─── Strava Integration ─────────────────────────────────────
+    stravaConnected: boolean;
+    stravaAccessToken: string;
+    stravaRefreshToken: string;
+    stravaTokenExpiresAt: number; // Unix timestamp in seconds
+    stravaAthleteId: number | null;
+    stravaAthleteName: string;
+    stravaAthleteAvatar: string;
+    stravaSyncedAt: string; // ISO date string, empty if never synced
+    stravaStats: {
+        allTimeRuns: number;
+        allTimeDistance: number;   // meters
+        allTimeElevation: number;  // meters
+        ytdRuns: number;
+        ytdDistance: number;       // meters
+        recentRuns: number;
+        recentDistance: number;    // meters
+    } | null;
+
+    // ─── Actions ─────────────────────────────────────────────────
+    updateField: (field: keyof Omit<UserState, 'updateField' | 'triggerPaceHighlight' | 'toggleTheme' | 'updatePersonalRecord' | 'connectStrava' | 'disconnectStrava' | 'updateStravaStats' | 'setSyncedAt'>, value: number | string | boolean) => void;
     updatePersonalRecord: (distance: keyof UserState['personalRecords'], time: string) => void;
     triggerPaceHighlight: () => void;
     toggleTheme: () => void;
+
+    // Strava actions
+    connectStrava: (data: { accessToken: string; refreshToken: string; expiresAt: number; athleteId: number; athleteName: string; athleteAvatar: string }) => void;
+    disconnectStrava: () => void;
+    updateStravaStats: (stats: NonNullable<UserState['stravaStats']>) => void;
+    setSyncedAt: () => void;
 }
 
 export const useUserStore = create<UserState>()(
@@ -77,6 +103,18 @@ export const useUserStore = create<UserState>()(
                 "marathon": { current: "", previous: "" },
             },
 
+            // Strava defaults
+            stravaConnected: false,
+            stravaAccessToken: '',
+            stravaRefreshToken: '',
+            stravaTokenExpiresAt: 0,
+            stravaAthleteId: null,
+            stravaAthleteName: '',
+            stravaAthleteAvatar: '',
+            stravaSyncedAt: '',
+            stravaStats: null,
+
+            // ─── Actions ────────────────────────────────────────────
             updateField: (field, value) => set((state) => ({ ...state, [field]: value })),
             
             triggerPaceHighlight: () => {
@@ -118,6 +156,35 @@ export const useUserStore = create<UserState>()(
                     }
                 };
             }),
+
+            // Strava actions
+            connectStrava: ({ accessToken, refreshToken, expiresAt, athleteId, athleteName, athleteAvatar }) =>
+                set({
+                    stravaConnected: true,
+                    stravaAccessToken: accessToken,
+                    stravaRefreshToken: refreshToken,
+                    stravaTokenExpiresAt: expiresAt,
+                    stravaAthleteId: athleteId,
+                    stravaAthleteName: athleteName,
+                    stravaAthleteAvatar: athleteAvatar,
+                }),
+
+            disconnectStrava: () =>
+                set({
+                    stravaConnected: false,
+                    stravaAccessToken: '',
+                    stravaRefreshToken: '',
+                    stravaTokenExpiresAt: 0,
+                    stravaAthleteId: null,
+                    stravaAthleteName: '',
+                    stravaAthleteAvatar: '',
+                    stravaSyncedAt: '',
+                    stravaStats: null,
+                }),
+
+            updateStravaStats: (stats) => set({ stravaStats: stats }),
+
+            setSyncedAt: () => set({ stravaSyncedAt: new Date().toISOString() }),
         }),
         {
             name: 'viterun-user-storage',
