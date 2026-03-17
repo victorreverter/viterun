@@ -40,10 +40,13 @@ export default function StravaCallbackPage() {
                     athleteAvatar: data.athlete.profile_medium || "",
                 });
                 setStatus("success");
-                // Redirect to dashboard after a brief success message
+                // Redirect to app root by stripping /strava/callback from the current path
+                // Works regardless of basePath: /viterun/strava/callback → /viterun/
                 setTimeout(() => {
-                    window.location.href = `${window.location.origin}${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/`;
-                }, 2000);
+                    const segments = window.location.pathname.split("/").filter(Boolean);
+                    const basePath = segments.slice(0, -2).join("/");
+                    window.location.href = window.location.origin + (basePath ? `/${basePath}/` : "/");
+                }, 1800);
             })
             .catch((err: Error) => {
                 setStatus("error");
@@ -95,7 +98,7 @@ export default function StravaCallbackPage() {
                         <h1 className="text-2xl font-bold text-foreground mb-2">Connection Failed</h1>
                         <p className="text-gray-400 text-sm mb-6">{errorMsg}</p>
                         <a
-                            href={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/`}
+                            href="../"
                             className="inline-block px-6 py-2.5 bg-brand-surface-light text-foreground rounded-xl text-sm font-medium hover:bg-brand-surface-light/80 transition-colors"
                         >
                             Back to Dashboard
