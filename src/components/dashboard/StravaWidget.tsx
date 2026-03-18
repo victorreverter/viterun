@@ -76,21 +76,30 @@ export function StravaWidget() {
                 }
             );
 
-            // 1. Fetch athlete stats
+            // 1. Fetch athlete stats (still needed for YTD and recent stats)
             const stats = await fetchAthleteStats(stravaAthleteId, token);
+            
+            // 2. Fetch ALL activities to extract PRs (up to 5000 runs)
+            const activities = await fetchAllActivities(token);
+            const prs = extractPRsFromActivities(activities);
+
+            // Calculate true ALL-TIME totals from the raw activity feed.
+            // Strava's athlete stats API often excludes "Trail Runs" or "Virtual Runs" from all_run_totals.
+            // By summing manually from our full activity list, we get the real >6000km number.
+            const trueAllTimeRuns = activities.filter(a => a.type === 'Run' || a.sport_type === 'Run').length;
+            const trueAllTimeDistance = activities
+                .filter(a => a.type === 'Run' || a.sport_type === 'Run')
+                .reduce((sum, current) => sum + current.distance, 0);
+
             updateStravaStats({
-                allTimeRuns: stats.all_run_totals.count,
-                allTimeDistance: stats.all_run_totals.distance,
-                allTimeElevation: stats.all_run_totals.elevation_gain,
+                allTimeRuns: trueAllTimeRuns,
+                allTimeDistance: trueAllTimeDistance,
+                allTimeElevation: stats.all_run_totals.elevation_gain, // We can keep this or recalculate if needed
                 ytdRuns: stats.ytd_run_totals.count,
                 ytdDistance: stats.ytd_run_totals.distance,
                 recentRuns: stats.recent_run_totals.count,
                 recentDistance: stats.recent_run_totals.distance,
             });
-
-            // 2. Fetch ALL activities to extract PRs (up to 5000 runs)
-            const activities = await fetchAllActivities(token);
-            const prs = extractPRsFromActivities(activities);
 
             let updatedCount = 0;
             for (const [distance, time] of Object.entries(prs)) {
