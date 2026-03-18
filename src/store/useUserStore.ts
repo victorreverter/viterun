@@ -51,6 +51,8 @@ export interface UserState {
         allTimeRuns: number;
         allTimeDistance: number;   // meters
         allTimeElevation: number;  // meters
+        allTimeMovingTime: number; // seconds
+        longestRunDistance: number; // meters
         ytdRuns: number;
         ytdDistance: number;       // meters
         recentRuns: number;

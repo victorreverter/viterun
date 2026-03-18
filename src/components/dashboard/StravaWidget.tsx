@@ -87,14 +87,19 @@ export function StravaWidget() {
             // Strava's athlete stats API often excludes "Trail Runs" or "Virtual Runs" from all_run_totals.
             // By summing manually from our full activity list, we get the real >6000km number.
             const trueAllTimeRuns = activities.filter(a => a.type === 'Run' || a.sport_type === 'Run').length;
-            const trueAllTimeDistance = activities
-                .filter(a => a.type === 'Run' || a.sport_type === 'Run')
-                .reduce((sum, current) => sum + current.distance, 0);
+            const runActivities = activities.filter(a => a.type === 'Run' || a.sport_type === 'Run');
+            
+            const trueAllTimeDistance = runActivities.reduce((sum, current) => sum + current.distance, 0);
+            const trueAllTimeElevation = runActivities.reduce((sum, current) => sum + (current.total_elevation_gain || 0), 0);
+            const trueAllTimeMovingTime = runActivities.reduce((sum, current) => sum + (current.moving_time || 0), 0);
+            const trueLongestRun = runActivities.reduce((max, current) => current.distance > max ? current.distance : max, 0);
 
             updateStravaStats({
                 allTimeRuns: trueAllTimeRuns,
                 allTimeDistance: trueAllTimeDistance,
-                allTimeElevation: stats.all_run_totals.elevation_gain, // We can keep this or recalculate if needed
+                allTimeElevation: trueAllTimeElevation,
+                allTimeMovingTime: trueAllTimeMovingTime,
+                longestRunDistance: trueLongestRun,
                 ytdRuns: stats.ytd_run_totals.count,
                 ytdDistance: stats.ytd_run_totals.distance,
                 recentRuns: stats.recent_run_totals.count,
@@ -200,18 +205,30 @@ export function StravaWidget() {
 
             {/* Stats Grid */}
             {stravaStats && (
-                <div className="grid grid-cols-3 gap-2">
-                    <div className="bg-brand-midnight rounded-xl p-3 text-center border border-brand-surface-light">
-                        <p className="text-lg font-black text-foreground leading-tight">{stravaStats.allTimeRuns}</p>
-                        <p className="text-[10px] text-gray-500 uppercase font-bold tracking-wider mt-0.5">All Runs</p>
+                <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3">
+                    <div className="bg-brand-midnight rounded-xl p-3 text-center border border-brand-surface-light hover:border-[#FC4C02]/30 transition-colors">
+                        <p className="text-xl md:text-2xl font-black text-foreground leading-tight">{stravaStats.allTimeRuns}</p>
+                        <p className="text-[10px] sm:text-xs text-gray-500 uppercase font-bold tracking-wider mt-0.5">Total Runs</p>
                     </div>
-                    <div className="bg-brand-midnight rounded-xl p-3 text-center border border-brand-surface-light">
-                        <p className="text-lg font-black text-foreground leading-tight">{metersToKm(stravaStats.allTimeDistance)}</p>
-                        <p className="text-[10px] text-gray-500 uppercase font-bold tracking-wider mt-0.5">km Total</p>
+                    <div className="bg-brand-midnight rounded-xl p-3 text-center border border-brand-surface-light hover:border-[#FC4C02]/30 transition-colors">
+                        <p className="text-xl md:text-2xl font-black text-foreground leading-tight">{metersToKm(stravaStats.allTimeDistance)}</p>
+                        <p className="text-[10px] sm:text-xs text-gray-500 uppercase font-bold tracking-wider mt-0.5">km Total</p>
                     </div>
-                    <div className="bg-brand-midnight rounded-xl p-3 text-center border border-brand-surface-light">
-                        <p className="text-lg font-black text-foreground leading-tight">{metersToKm(stravaStats.ytdDistance)}</p>
-                        <p className="text-[10px] text-gray-500 uppercase font-bold tracking-wider mt-0.5">km YTD</p>
+                    <div className="bg-brand-midnight rounded-xl p-3 text-center border border-brand-surface-light hover:border-[#FC4C02]/30 transition-colors">
+                        <p className="text-xl md:text-2xl font-black text-foreground leading-tight">{metersToKm(stravaStats.ytdDistance)}</p>
+                        <p className="text-[10px] sm:text-xs text-gray-500 uppercase font-bold tracking-wider mt-0.5">km YTD</p>
+                    </div>
+                    <div className="bg-brand-midnight rounded-xl p-3 text-center border border-brand-surface-light hover:border-[#FC4C02]/30 transition-colors">
+                        <p className="text-xl md:text-2xl font-black text-foreground leading-tight">{Math.floor((stravaStats.allTimeMovingTime || 0) / 3600)}</p>
+                        <p className="text-[10px] sm:text-xs text-gray-500 uppercase font-bold tracking-wider mt-0.5">Hours Run</p>
+                    </div>
+                    <div className="bg-brand-midnight rounded-xl p-3 text-center border border-brand-surface-light hover:border-[#FC4C02]/30 transition-colors">
+                        <p className="text-xl md:text-2xl font-black text-foreground leading-tight">{metersToKm(stravaStats.longestRunDistance || 0)}</p>
+                        <p className="text-[10px] sm:text-xs text-gray-500 uppercase font-bold tracking-wider mt-0.5">km Longest</p>
+                    </div>
+                    <div className="bg-brand-midnight rounded-xl p-3 text-center border border-brand-surface-light hover:border-[#FC4C02]/30 transition-colors">
+                        <p className="text-xl md:text-2xl font-black text-foreground leading-tight">{Math.round(stravaStats.allTimeElevation || 0).toLocaleString()}</p>
+                        <p className="text-[10px] sm:text-xs text-gray-500 uppercase font-bold tracking-wider mt-0.5">m Elevation</p>
                     </div>
                 </div>
             )}

@@ -39,15 +39,17 @@ export default function Home() {
         <p className="text-gray-400 mt-2">Welcome to your mission control. Your PRs, saved stats, and logs will appear here.</p>
       </div>
 
+      {/* Strava Integration Widget - Full Width */}
+      <div className="w-full">
+        <StravaWidget />
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {/* Next Race Widget */}
         <NextRaceWidget />
 
         {/* Personal Records Widget */}
         <PersonalRecordsWidget />
-
-        {/* Strava Integration Widget */}
-        <StravaWidget />
 
         {/* Current Target Pace Widget */}
         <div className="bg-brand-surface border border-brand-surface-light hover:border-brand-lime/50 transition-colors rounded-2xl p-6 flex flex-col gap-4 shadow-lg shadow-black/20">
