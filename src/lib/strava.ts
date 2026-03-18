@@ -126,13 +126,29 @@ export interface StravaActivity {
     max_heartrate?: number;
 }
 
-export async function fetchActivities(accessToken: string, perPage = 200): Promise<StravaActivity[]> {
-    // Fetch only running activities to speed up PR extraction
-    const res = await fetch(`${STRAVA_API_BASE}/athlete/activities?per_page=${perPage}&sport_type=Run`, {
-        headers: { Authorization: `Bearer ${accessToken}` },
-    });
-    if (!res.ok) throw new Error('Failed to fetch activities');
-    return res.json();
+export async function fetchAllActivities(accessToken: string): Promise<StravaActivity[]> {
+    let allActivities: StravaActivity[] = [];
+    let page = 1;
+    let hasMore = true;
+
+    while (hasMore) {
+        const res = await fetch(`${STRAVA_API_BASE}/athlete/activities?per_page=200&page=${page}&sport_type=Run`, {
+            headers: { Authorization: `Bearer ${accessToken}` },
+        });
+        if (!res.ok) throw new Error('Failed to fetch activities');
+        
+        const data: StravaActivity[] = await res.json();
+        allActivities = allActivities.concat(data);
+        
+        // If we get fewer than 200 items, we've reached the end.
+        // Cap at 25 pages (5,000 runs) to protect API rate limits.
+        if (data.length < 200 || page >= 25) {
+            hasMore = false;
+        } else {
+            page++;
+        }
+    }
+    return allActivities;
 }
 
 // ─── Data Conversion ─────────────────────────────────────────

@@ -5,7 +5,7 @@ import { useUserStore } from "@/store/useUserStore";
 import {
     buildStravaAuthUrl,
     fetchAthleteStats,
-    fetchActivities,
+    fetchAllActivities,
     extractPRsFromActivities,
     getValidToken,
     metersToKm,
@@ -88,8 +88,8 @@ export function StravaWidget() {
                 recentDistance: stats.recent_run_totals.distance,
             });
 
-            // 2. Fetch recent 200 activities to extract PRs
-            const activities = await fetchActivities(token, 200);
+            // 2. Fetch ALL activities to extract PRs (up to 5000 runs)
+            const activities = await fetchAllActivities(token);
             const prs = extractPRsFromActivities(activities);
 
             let updatedCount = 0;

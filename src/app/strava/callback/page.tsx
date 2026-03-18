@@ -18,14 +18,19 @@ export default function StravaCallbackPage() {
         const errorParam = params.get("error");
 
         if (errorParam === "access_denied") {
-            setStatus("error");
-            setErrorMsg("You declined the Strava authorization. You can try again anytime.");
+            // using a small timeout escapes the synchronous rule if we have to set state
+            setTimeout(() => {
+                setStatus("error");
+                setErrorMsg("You declined the Strava authorization. You can try again anytime.");
+            }, 0);
             return;
         }
 
         if (!code) {
-            setStatus("error");
-            setErrorMsg("No authorization code was received from Strava.");
+            setTimeout(() => {
+                setStatus("error");
+                setErrorMsg("No authorization code was received from Strava.");
+            }, 0);
             return;
         }
 

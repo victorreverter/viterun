@@ -81,7 +81,7 @@ export default function Home() {
         {filteredCalculators.length === 0 ? (
             <div className="col-span-1 lg:col-span-3 p-12 flex flex-col items-center justify-center text-center bg-brand-surface rounded-2xl border border-brand-surface-light border-dashed">
               <h2 className="text-xl font-bold text-gray-300">No tools found</h2>
-              <p className="text-gray-500 mt-2 max-w-md">We couldn't find any calculators or predictors matching "{query}". Try searching for something else like "Pace" or "Zones".</p>
+              <p className="text-gray-500 mt-2 max-w-md">We couldn&apos;t find any calculators or predictors matching &quot;{query}&quot;. Try searching for something else like &quot;Pace&quot; or &quot;Zones&quot;.</p>
             </div>
         ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-6 items-start">
