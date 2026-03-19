@@ -9,6 +9,8 @@ import {
     extractPRsFromActivities,
     getValidToken,
     metersToKm,
+    fetchAthleteProfile,
+    fetchGear,
     type StravaTokenResponse,
 } from "@/lib/strava";
 import { RefreshCw, LogOut, Zap, MapPin, TrendingUp, Calendar } from "lucide-react";
@@ -38,6 +40,7 @@ export function StravaWidget() {
         connectStrava,
         disconnectStrava,
         updateStravaStats,
+        updateStravaShoes,
         setSyncedAt,
         updatePersonalRecord,
     } = useUserStore();
@@ -76,10 +79,27 @@ export function StravaWidget() {
                 }
             );
 
-            // 1. Fetch athlete stats (still needed for YTD and recent stats)
+            // 1. Fetch athlete profile (includes shoes)
+            const profile = await fetchAthleteProfile(token);
+            
+            // Strava's /athlete endpoint often returns outdated distances for shoes. 
+            // Querying /gear/{id} explicitly gives the true, up-to-date mileage.
+            const detailedShoes = await Promise.all((profile.shoes || []).map(async (shoe) => {
+                try {
+                    const gearInfo = await fetchGear(shoe.id, token);
+                    return { ...shoe, distance: gearInfo.distance || shoe.distance };
+                } catch (e) {
+                    console.error("Failed to fetch detailed gear for", shoe.id, e);
+                    return shoe;
+                }
+            }));
+
+            updateStravaShoes(detailedShoes);
+
+            // 2. Fetch athlete stats (still needed for YTD and recent stats)
             const stats = await fetchAthleteStats(stravaAthleteId, token);
             
-            // 2. Fetch ALL activities to extract PRs (up to 5000 runs)
+            // 3. Fetch ALL activities to extract PRs (up to 5000 runs)
             const activities = await fetchAllActivities(token);
             const prs = extractPRsFromActivities(activities);
 

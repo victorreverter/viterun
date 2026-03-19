@@ -7,6 +7,7 @@ import { HRZoneGenerator } from "@/components/calculators/HRZoneGenerator";
 import { NextRaceWidget } from "@/components/dashboard/NextRaceWidget";
 import { PersonalRecordsWidget } from "@/components/dashboard/PersonalRecordsWidget";
 import { StravaWidget } from "@/components/dashboard/StravaWidget";
+import { ShoeMileageWidget } from "@/components/dashboard/ShoeMileageWidget";
 import { useSearchStore } from "@/store/useSearchStore";
 import { useUserStore } from "@/store/useUserStore";
 
@@ -75,6 +76,9 @@ export default function Home() {
                 {targetPace ? "Update Pace" : "Calculate Pace"}
             </button>
         </div>
+
+        {/* Shoe Mileage Widget */}
+        <ShoeMileageWidget />
       </div>
 
       <div className="pt-8 border-t border-brand-surface-light">

@@ -36,7 +36,18 @@ export interface StravaTokenResponse {
     access_token: string;
     refresh_token: string;
     expires_at: number; // Unix timestamp (seconds)
-    athlete: StravaAthlete;
+    athlete: StravaAthlete; // SummaryAthlete
+}
+
+export interface StravaShoe {
+    id: string;
+    primary: boolean;
+    name: string;
+    distance: number; // meters
+}
+
+export interface StravaDetailedAthlete extends StravaAthlete {
+    shoes: StravaShoe[];
 }
 
 export async function exchangeCodeForToken(code: string): Promise<StravaTokenResponse> {
@@ -102,6 +113,22 @@ export interface StravaAthleteStats {
     ytd_run_totals: StravaRunTotals;
     recent_run_totals: StravaRunTotals;
     biggest_run_distance: number;
+}
+
+export async function fetchAthleteProfile(accessToken: string): Promise<StravaDetailedAthlete> {
+    const res = await fetch(`${STRAVA_API_BASE}/athlete`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+    });
+    if (!res.ok) throw new Error('Failed to fetch detailed athlete profile');
+    return res.json();
+}
+
+export async function fetchGear(gearId: string, accessToken: string): Promise<{ distance: number; name: string; primary: boolean; id: string }> {
+    const res = await fetch(`${STRAVA_API_BASE}/gear/${gearId}`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+    });
+    if (!res.ok) throw new Error(`Failed to fetch gear ${gearId}`);
+    return res.json();
 }
 
 export async function fetchAthleteStats(athleteId: number, accessToken: string): Promise<StravaAthleteStats> {

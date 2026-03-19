@@ -47,6 +47,7 @@ export interface UserState {
     stravaAthleteName: string;
     stravaAthleteAvatar: string;
     stravaSyncedAt: string; // ISO date string, empty if never synced
+    stravaShoes: { id: string; name: string; distance: number; primary: boolean }[] | null;
     stravaStats: {
         allTimeRuns: number;
         allTimeDistance: number;   // meters
@@ -65,10 +66,10 @@ export interface UserState {
     triggerPaceHighlight: () => void;
     toggleTheme: () => void;
 
-    // Strava actions
     connectStrava: (data: { accessToken: string; refreshToken: string; expiresAt: number; athleteId: number; athleteName: string; athleteAvatar: string }) => void;
     disconnectStrava: () => void;
     updateStravaStats: (stats: NonNullable<UserState['stravaStats']>) => void;
+    updateStravaShoes: (shoes: NonNullable<UserState['stravaShoes']>) => void;
     setSyncedAt: () => void;
 }
 
@@ -114,6 +115,7 @@ export const useUserStore = create<UserState>()(
             stravaAthleteName: '',
             stravaAthleteAvatar: '',
             stravaSyncedAt: '',
+            stravaShoes: null,
             stravaStats: null,
 
             // ─── Actions ────────────────────────────────────────────
@@ -181,10 +183,12 @@ export const useUserStore = create<UserState>()(
                     stravaAthleteName: '',
                     stravaAthleteAvatar: '',
                     stravaSyncedAt: '',
+                    stravaShoes: null,
                     stravaStats: null,
                 }),
 
             updateStravaStats: (stats) => set({ stravaStats: stats }),
+            updateStravaShoes: (shoes) => set({ stravaShoes: shoes }),
 
             setSyncedAt: () => set({ stravaSyncedAt: new Date().toISOString() }),
         }),
