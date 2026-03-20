@@ -4,6 +4,7 @@ import { PaceCalculator } from "@/components/calculators/PaceCalculator";
 import { RacePredictor } from "@/components/calculators/RacePredictor";
 import { BodyFatCalculator } from "@/components/calculators/BodyFatCalculator";
 import { HRZoneGenerator } from "@/components/calculators/HRZoneGenerator";
+import { RaceNutritionPlanner } from "@/components/calculators/RaceNutritionPlanner";
 import { NextRaceWidget } from "@/components/dashboard/NextRaceWidget";
 import { PersonalRecordsWidget } from "@/components/dashboard/PersonalRecordsWidget";
 import { ShoeMileageWidget } from "@/components/dashboard/ShoeMileageWidget";
@@ -53,7 +54,8 @@ export default function Home() {
         </div>
     )},
     { name: "Shoe Mileage Tracker Equipment", component: <ShoeMileageWidget key="shoes" /> },
-    { name: "Race Predictor Calculator", component: <div key="race" className="col-span-1 lg:col-span-2"><RacePredictor /></div> },
+    { name: "Race Fueling Nutrition Planner Strategy", component: <div key="nutrition" className="col-span-1 lg:col-span-2 md:col-span-2"><RaceNutritionPlanner /></div> },
+    { name: "Race Predictor Calculator", component: <div key="race" className="col-span-1 lg:col-span-2 md:col-span-2"><RacePredictor /></div> },
     { name: "HR Zones Generator Heart Rate", component: <div key="hr" className="col-span-1 lg:col-span-2"><HRZoneGenerator /></div> },
     { name: "Pace Calculator Time Speed", component: <div key="pace" className="col-span-1"><PaceCalculator /></div> },
     { name: "Body Fat Calculator Weight", component: <div key="fat" className="col-span-1"><BodyFatCalculator /></div> },
