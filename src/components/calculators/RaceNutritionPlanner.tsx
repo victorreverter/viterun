@@ -8,11 +8,23 @@ export function RaceNutritionPlanner() {
     const { weight: storeWeight } = useUserStore();
 
     // Inputs
+    const [raceType, setRaceType] = useState<string>("marathon");
     const [weight, setWeight] = useState<number | "">(storeWeight || 70);
     const [hours, setHours] = useState<number | "">(3);
     const [minutes, setMinutes] = useState<number | "">(30);
     const [strategy, setStrategy] = useState<"standard" | "aggressive" | "elite">("aggressive");
     const [gelSize, setGelSize] = useState<number | "">(30); // e.g. Maurten 100 is 25g, SIS Beta is 40g, standard is ~30g
+    const [customDistance, setCustomDistance] = useState<number | "">("");
+    const [distanceUnit, setDistanceUnit] = useState<"km" | "mi">("km");
+
+    const handleRaceChange = (type: string) => {
+        setRaceType(type);
+        if (type === "5k") { setHours(0); setMinutes(25); }
+        else if (type === "10k") { setHours(0); setMinutes(55); }
+        else if (type === "half") { setHours(1); setMinutes(55); }
+        else if (type === "marathon") { setHours(4); setMinutes(0); }
+        // custom leaves them alone
+    };
 
     useEffect(() => {
         if (storeWeight && weight === 70 && typeof storeWeight === 'number') {
@@ -46,7 +58,8 @@ export function RaceNutritionPlanner() {
     const gelsDuringRace = totalGelsRequired - 1;
     const gelIntervalMinutes = gelsDuringRace > 0 ? Math.floor(totalMinutes / gelsDuringRace) : 0;
 
-    // Carb loading (2 days before) - 8g to 10g per kg
+    // Carb loading (2 days before) - 8g to 10g per kg. Only needed for >90 mins.
+    const needsCarbLoad = totalMinutes >= 90;
     const carbLoadDaily = w * 8; 
     // Race morning (2-3 hrs before) - 2g to 3g per kg
     const raceMorningCarbs = w * 2;
@@ -64,6 +77,56 @@ export function RaceNutritionPlanner() {
             </div>
 
             <div className="grid grid-cols-2 gap-4 mb-6 relative">
+                <div className="col-span-2 space-y-2">
+                    <label className="text-xs font-semibold text-gray-400 pl-1 uppercase tracking-wider">Race Type</label>
+                    <div className="flex flex-wrap gap-2">
+                        {[
+                            { id: "5k", label: "5K" },
+                            { id: "10k", label: "10K" },
+                            { id: "half", label: "Half" },
+                            { id: "marathon", label: "Marathon" },
+                            { id: "custom", label: "Custom" }
+                        ].map((rt) => (
+                            <button
+                                key={rt.id}
+                                onClick={() => handleRaceChange(rt.id)}
+                                className={`flex-1 min-w-[50px] py-2 px-1 rounded-xl text-xs sm:text-sm font-bold transition-all ${
+                                    raceType === rt.id 
+                                    ? "bg-brand-lime text-black shadow-[0_0_10px_rgba(204,255,0,0.3)] border border-brand-lime" 
+                                    : "bg-brand-midnight/50 text-gray-400 hover:text-foreground hover:bg-brand-surface-light border border-brand-surface-light"
+                                }`}
+                            >
+                                {rt.label}
+                            </button>
+                        ))}
+                    </div>
+                    {raceType === "custom" && (
+                        <div className="flex items-center gap-2 mt-3 animate-in fade-in slide-in-from-top-2 duration-300">
+                            <input
+                                type="number"
+                                value={customDistance === "" ? "" : customDistance}
+                                onChange={(e) => setCustomDistance(e.target.value === "" ? "" : Number(e.target.value))}
+                                className="w-full p-3 bg-brand-midnight/50 border border-brand-surface-light rounded-xl text-foreground font-mono font-bold appearance-none focus:outline-none focus:border-brand-lime focus:ring-1 focus:ring-brand-lime transition-all"
+                                placeholder="Enter distance"
+                            />
+                            <div className="flex bg-brand-midnight/50 border border-brand-surface-light rounded-xl p-1 shrink-0">
+                                <button
+                                    onClick={() => setDistanceUnit("km")}
+                                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${distanceUnit === "km" ? "bg-brand-surface-light text-foreground" : "text-gray-500 hover:text-gray-300"}`}
+                                >
+                                    km
+                                </button>
+                                <button
+                                    onClick={() => setDistanceUnit("mi")}
+                                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${distanceUnit === "mi" ? "bg-brand-surface-light text-foreground" : "text-gray-500 hover:text-gray-300"}`}
+                                >
+                                    mi
+                                </button>
+                            </div>
+                        </div>
+                    )}
+                </div>
+
                 <div className="space-y-1.5 focus-within:z-10">
                     <label className="text-xs font-semibold text-gray-400 pl-1 uppercase tracking-wider">Target Finish Time</label>
                     <div className="relative flex items-center">
@@ -133,10 +196,16 @@ export function RaceNutritionPlanner() {
                         </h4>
                         <div className="grid grid-cols-2 gap-4">
                             <div>
-                                <p className="text-xs text-gray-500 mb-1">T-48hrs (Carb Load)</p>
-                                <p className="font-mono text-xl text-foreground font-black">
-                                    {Math.round(carbLoadDaily)} <span className="text-sm font-sans font-medium text-gray-400">g/day</span>
-                                </p>
+                                <p className="text-xs text-gray-500 mb-1">T-48hrs (Diet)</p>
+                                {needsCarbLoad ? (
+                                    <p className="font-mono text-xl text-foreground font-black">
+                                        {Math.round(carbLoadDaily)} <span className="text-sm font-sans font-medium text-gray-400">g/day carbs</span>
+                                    </p>
+                                ) : (
+                                    <p className="font-mono text-lg text-foreground font-black tracking-tight" style={{ fontSize: '15px' }}>
+                                        Normal Diet
+                                    </p>
+                                )}
                             </div>
                             <div>
                                 <p className="text-xs text-gray-500 mb-1">T-3hrs (Breakfast)</p>
