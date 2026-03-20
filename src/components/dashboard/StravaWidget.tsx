@@ -225,7 +225,7 @@ export function StravaWidget() {
 
             {/* Stats Grid */}
             {stravaStats && (
-                <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3">
+                <div className="grid grid-cols-2 gap-3">
                     <div className="bg-brand-midnight rounded-xl p-3 text-center border border-brand-surface-light hover:border-[#FC4C02]/30 transition-colors">
                         <p className="text-xl md:text-2xl font-black text-foreground leading-tight">{stravaStats.allTimeRuns}</p>
                         <p className="text-[10px] sm:text-xs text-gray-500 uppercase font-bold tracking-wider mt-0.5">Total Runs</p>
@@ -244,7 +244,7 @@ export function StravaWidget() {
                     </div>
                     <div className="bg-brand-midnight rounded-xl p-3 text-center border border-brand-surface-light hover:border-[#FC4C02]/30 transition-colors">
                         <p className="text-xl md:text-2xl font-black text-foreground leading-tight">{metersToKm(stravaStats.longestRunDistance || 0)}</p>
-                        <p className="text-[10px] sm:text-xs text-gray-500 uppercase font-bold tracking-wider mt-0.5">km Longest</p>
+                        <p className="text-[10px] sm:text-xs text-gray-500 uppercase font-bold tracking-wider mt-0.5">Longest Dist.</p>
                     </div>
                     <div className="bg-brand-midnight rounded-xl p-3 text-center border border-brand-surface-light hover:border-[#FC4C02]/30 transition-colors">
                         <p className="text-xl md:text-2xl font-black text-foreground leading-tight">{Math.round(stravaStats.allTimeElevation || 0).toLocaleString()}</p>

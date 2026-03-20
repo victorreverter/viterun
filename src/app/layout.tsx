@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { Sidebar } from "@/components/layout/Sidebar";
 import { Header } from "@/components/layout/Header";
 import { ThemeProvider } from "@/components/ThemeProvider";
 
@@ -53,7 +54,8 @@ export default function RootLayout({
         className={`${fontSans.variable} ${fontMono.variable} antialiased bg-background text-foreground min-h-screen flex transition-colors duration-300`}
       >
         <ThemeProvider />
-        <div className="flex-1 flex flex-col min-w-0">
+        <Sidebar />
+        <div className="flex-1 flex flex-col lg:ml-[380px] min-w-0">
           <Header />
           <main className="flex-1 p-4 lg:p-8 w-full max-w-7xl mx-auto">
             {children}

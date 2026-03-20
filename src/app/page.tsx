@@ -6,8 +6,8 @@ import { BodyFatCalculator } from "@/components/calculators/BodyFatCalculator";
 import { HRZoneGenerator } from "@/components/calculators/HRZoneGenerator";
 import { NextRaceWidget } from "@/components/dashboard/NextRaceWidget";
 import { PersonalRecordsWidget } from "@/components/dashboard/PersonalRecordsWidget";
-import { StravaWidget } from "@/components/dashboard/StravaWidget";
 import { ShoeMileageWidget } from "@/components/dashboard/ShoeMileageWidget";
+import { StravaWidget } from "@/components/dashboard/StravaWidget";
 import { useSearchStore } from "@/store/useSearchStore";
 import { useUserStore } from "@/store/useUserStore";
 
@@ -40,19 +40,15 @@ export default function Home() {
         <p className="text-gray-400 mt-2">Welcome to your mission control. Your PRs, saved stats, and logs will appear here.</p>
       </div>
 
-      {/* Strava Integration Widget - Full Width */}
-      <div className="w-full">
-        <StravaWidget />
+      {/* Strava Component for Mobile Only (Hidden on Desktop since it is in the sidebar) */}
+      <div className="w-full lg:hidden">
+          <StravaWidget />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {/* Next Race Widget */}
         <NextRaceWidget />
-
-        {/* Personal Records Widget */}
         <PersonalRecordsWidget />
 
-        {/* Current Target Pace Widget */}
         <div className="bg-brand-surface border border-brand-surface-light hover:border-brand-lime/50 transition-colors rounded-2xl p-6 flex flex-col gap-4 shadow-lg shadow-black/20">
             <h3 className="text-brand-lime font-mono text-sm tracking-wider flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-purple-400 shadow-[0_0_8px_#c084fc]"></span>
@@ -77,7 +73,6 @@ export default function Home() {
             </button>
         </div>
 
-        {/* Shoe Mileage Widget */}
         <ShoeMileageWidget />
       </div>
 
@@ -90,7 +85,7 @@ export default function Home() {
               <p className="text-gray-500 mt-2 max-w-md">We couldn&apos;t find any calculators or predictors matching &quot;{query}&quot;. Try searching for something else like &quot;Pace&quot; or &quot;Zones&quot;.</p>
             </div>
         ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-6 items-start">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
                {filteredCalculators.map(calc => calc.component)}
             </div>
         )}
