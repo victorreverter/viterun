@@ -44,25 +44,42 @@ export function RaceNutritionPlanner() {
     };
     const carbsPerHour = strategyCarbs[strategy];
 
+    // Adjust based on scientific duration guidelines regardless of user strategy choice:
+    let recommendedCarbsPerHour = carbsPerHour;
+    let needsCarbLoad = false;
+    let breakfastMultiplier = 2; // Default 2g/kg
+
+    if (totalMinutes < 60) {
+        recommendedCarbsPerHour = 0; // No gels needed for < 1hr
+        breakfastMultiplier = 1; // Light breakfast (1g/kg)
+    } else if (totalMinutes < 90) {
+        recommendedCarbsPerHour = Math.min(carbsPerHour, 30); // Max 30g/hr for 60-90 min events
+        breakfastMultiplier = 1.5;
+    } else if (totalMinutes < 150) {
+        recommendedCarbsPerHour = Math.min(carbsPerHour, 60); // Half marathon distance limits
+        breakfastMultiplier = 2;
+    } else {
+        recommendedCarbsPerHour = carbsPerHour; // Full Marathon/Ultra strategy
+        needsCarbLoad = true;
+        breakfastMultiplier = 3;
+    }
+
     // Calculations
-    const totalCarbsRace = (totalMinutes / 60) * carbsPerHour;
+    const totalCarbsRace = (totalMinutes / 60) * recommendedCarbsPerHour;
     const gSize = Number(gelSize) || 30;
     
-    // Calculate total gels. We assume 1 gel is taken 15 mins before race. 
-    // The rest are taken during.
-    const totalGelsRequired = Math.max(1, Math.ceil(totalCarbsRace / gSize));
+    // Calculate total gels. For 0 carbs, 0 gels. Otherwise round up.
+    const totalGelsRequired = totalCarbsRace > 0 ? Math.ceil(totalCarbsRace / gSize) : 0;
     
-    // Let's create a timeline for the race
-    // We take 1 gel 15 mins before (T-15min). 
+    // We take 1 gel 15 mins before (T-15min) IF we require gels.
     // Remaining gels are distributed evenly across the race duration.
-    const gelsDuringRace = totalGelsRequired - 1;
+    const gelsDuringRace = totalGelsRequired > 0 ? totalGelsRequired - 1 : 0;
     const gelIntervalMinutes = gelsDuringRace > 0 ? Math.floor(totalMinutes / gelsDuringRace) : 0;
 
-    // Carb loading (2 days before) - 8g to 10g per kg. Only needed for >90 mins.
-    const needsCarbLoad = totalMinutes >= 90;
+    // Carb loading (2 days before) - 8g to 10g per kg. Only needed for >150 mins.
     const carbLoadDaily = w * 8; 
-    // Race morning (2-3 hrs before) - 2g to 3g per kg
-    const raceMorningCarbs = w * 2;
+    // Race morning (2-3 hrs before)
+    const raceMorningCarbs = w * breakfastMultiplier;
 
     return (
         <div className="bg-brand-surface border border-brand-surface-light hover:border-brand-lime/50 transition-colors rounded-2xl p-6 shadow-lg shadow-black/20 flex flex-col h-full animate-in zoom-in-95 duration-500">
@@ -236,29 +253,37 @@ export function RaceNutritionPlanner() {
                         </div>
 
                         <div className="space-y-3 relative">
-                            <div className="absolute top-2 bottom-2 left-[5px] w-px bg-brand-surface-light"></div>
-                            
-                            <div className="flex gap-4 relative">
-                                <div className="w-3 h-3 rounded-full bg-brand-lime absolute left-0 top-1.5 shadow-[0_0_8px_#16A34A]"></div>
-                                <div className="pl-6">
-                                    <p className="text-sm font-bold text-foreground">T-15 mins before start</p>
-                                    <p className="text-xs text-gray-400 mt-0.5">Take 1 gel ({gSize}g carbs) on start line</p>
+                            {totalGelsRequired === 0 ? (
+                                <div className="text-sm font-medium text-gray-400 italic py-2 border-l-2 border-brand-surface-light pl-4">
+                                    No intra-race fueling is necessary for this duration. Your body's stored glycogen is fully sufficient for {Math.round(totalMinutes)} minutes!
                                 </div>
-                            </div>
-
-                            {gelsDuringRace > 0 && (
-                                <div className="flex gap-4 relative mt-3">
-                                    <div className="w-3 h-3 rounded-full bg-[#FC4C02] absolute left-0 top-1.5 shadow-[0_0_8px_rgba(252,76,2,0.8)]"></div>
-                                    <div className="pl-6">
-                                        <p className="text-sm font-bold text-foreground">During the Race</p>
-                                        <p className="text-xs text-gray-400 mt-0.5">
-                                            Take 1 gel every <span className="font-bold text-brand-lime">{gelIntervalMinutes} minutes</span>
-                                        </p>
-                                        <p className="text-[10px] text-gray-500 mt-1 italic">
-                                            ({gelsDuringRace} gels total during the run)
-                                        </p>
+                            ) : (
+                                <>
+                                    <div className="absolute top-2 bottom-2 left-[5px] w-px bg-brand-surface-light"></div>
+                                    
+                                    <div className="flex gap-4 relative">
+                                        <div className="w-3 h-3 rounded-full bg-brand-lime absolute left-0 top-1.5 shadow-[0_0_8px_#16A34A]"></div>
+                                        <div className="pl-6">
+                                            <p className="text-sm font-bold text-foreground">T-15 mins before start</p>
+                                            <p className="text-xs text-gray-400 mt-0.5">Take 1 gel ({gSize}g carbs) on start line</p>
+                                        </div>
                                     </div>
-                                </div>
+
+                                    {gelsDuringRace > 0 && (
+                                        <div className="flex gap-4 relative mt-3">
+                                            <div className="w-3 h-3 rounded-full bg-[#FC4C02] absolute left-0 top-1.5 shadow-[0_0_8px_rgba(252,76,2,0.8)]"></div>
+                                            <div className="pl-6">
+                                                <p className="text-sm font-bold text-foreground">During the Race</p>
+                                                <p className="text-xs text-gray-400 mt-0.5">
+                                                    Take 1 gel every <span className="font-bold text-brand-lime">{gelIntervalMinutes} minutes</span>
+                                                </p>
+                                                <p className="text-[10px] text-gray-500 mt-1 italic">
+                                                    ({gelsDuringRace} gels total during the run)
+                                                </p>
+                                            </div>
+                                        </div>
+                                    )}
+                                </>
                             )}
                         </div>
                     </div>
@@ -267,7 +292,11 @@ export function RaceNutritionPlanner() {
                         <Droplets className="w-4 h-4 text-blue-400 shrink-0 mt-0.5" />
                         <div>
                             <p className="text-xs font-bold text-blue-400">Hydration Target</p>
-                            <p className="text-xs text-gray-400 mt-0.5 leading-relaxed">Aim for 500-750ml of fluids per hour alongside your gels to optimize absorption and prevent GI distress.</p>
+                            <p className="text-xs text-gray-400 mt-0.5 leading-relaxed">
+                                {totalMinutes < 60 
+                                    ? "Drink to thirst before the start. Intra-race hydration is generally not required for short distances unless in extreme heat." 
+                                    : "Aim for 500-750ml of fluids per hour alongside your gels to optimize carbohydrate absorption and prevent GI distress."}
+                            </p>
                         </div>
                     </div>
 
