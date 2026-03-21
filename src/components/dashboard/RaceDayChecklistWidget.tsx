@@ -45,7 +45,9 @@ export function RaceDayChecklistWidget() {
         clearChecklist, 
         customChecklistItems, 
         addCustomChecklistItem, 
-        removeCustomChecklistItem 
+        removeCustomChecklistItem,
+        hiddenChecklistItems,
+        hideChecklistItem
     } = useUserStore();
 
     const [weather, setWeather] = useState<WeatherCondition>("Standard");
@@ -59,12 +61,18 @@ export function RaceDayChecklistWidget() {
         }
     };
 
-    // Combine standard, active weather, and custom items
     let displayedItems = [...STANDARD_ITEMS];
     if (weather !== "Standard") {
         displayedItems = [...displayedItems, ...WEATHER_ITEMS[weather]];
     }
-    displayedItems = [...displayedItems, ...customChecklistItems];
+    displayedItems = [...displayedItems, ...(customChecklistItems || [])];
+    
+    // Deduplicate any identical text items
+    displayedItems = Array.from(new Set(displayedItems));
+    
+    // Filter out hidden (deleted standard/weather) items
+    const hiddenSet = new Set(hiddenChecklistItems || []);
+    displayedItems = displayedItems.filter(item => !hiddenSet.has(item));
 
     // Calculate progress
     const checkedCount = displayedItems.filter(item => raceChecklist[item]).length;
@@ -133,10 +141,10 @@ export function RaceDayChecklistWidget() {
             </div>
 
             {/* Checklist */}
-            <div className="flex-1 overflow-y-auto pr-2 -mr-2 space-y-1 mb-4 custom-scrollbar min-h-[250px] max-h-[350px]">
+            <div className="flex-1 space-y-1 mb-4">
                 {displayedItems.map((item) => {
                     const isChecked = raceChecklist[item] || false;
-                    const isCustom = customChecklistItems.includes(item);
+                    const isCustom = (customChecklistItems || []).includes(item);
 
                     return (
                         <div 
@@ -156,17 +164,19 @@ export function RaceDayChecklistWidget() {
                                     {item}
                                 </span>
                             </div>
-                            {isCustom && (
-                                <button
-                                    onClick={(e) => {
-                                        e.stopPropagation();
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    if (isCustom) {
                                         removeCustomChecklistItem(item);
-                                    }}
-                                    className="p-1.5 text-gray-600 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors opacity-0 group-hover:opacity-100"
-                                >
-                                    <Trash2 className="w-3.5 h-3.5" />
-                                </button>
-                            )}
+                                    } else {
+                                        hideChecklistItem(item);
+                                    }
+                                }}
+                                className="p-1.5 text-gray-600 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors opacity-0 group-hover:opacity-100"
+                            >
+                                <Trash2 className="w-3.5 h-3.5" />
+                            </button>
                         </div>
                     );
                 })}

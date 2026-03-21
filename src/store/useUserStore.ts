@@ -27,6 +27,7 @@ export interface UserState {
     // Race Day Checklist
     raceChecklist: Record<string, boolean>;
     customChecklistItems: string[];
+    hiddenChecklistItems: string[];
 
     // Theme
     theme: 'dark' | 'light';
@@ -67,7 +68,7 @@ export interface UserState {
     } | null;
 
     // ─── Actions ─────────────────────────────────────────────────
-    updateField: (field: keyof Omit<UserState, 'updateField' | 'triggerPaceHighlight' | 'toggleTheme' | 'updatePersonalRecord' | 'connectStrava' | 'disconnectStrava' | 'updateStravaStats' | 'setSyncedAt' | 'toggleChecklistItem' | 'clearChecklist' | 'addCustomChecklistItem' | 'removeCustomChecklistItem'>, value: number | string | boolean) => void;
+    updateField: (field: keyof Omit<UserState, 'updateField' | 'triggerPaceHighlight' | 'toggleTheme' | 'updatePersonalRecord' | 'connectStrava' | 'disconnectStrava' | 'updateStravaStats' | 'setSyncedAt' | 'toggleChecklistItem' | 'clearChecklist' | 'addCustomChecklistItem' | 'removeCustomChecklistItem' | 'hideChecklistItem'>, value: number | string | boolean) => void;
     updatePersonalRecord: (distance: keyof UserState['personalRecords'], time: string) => void;
     triggerPaceHighlight: () => void;
     toggleTheme: () => void;
@@ -75,6 +76,7 @@ export interface UserState {
     clearChecklist: () => void;
     addCustomChecklistItem: (item: string) => void;
     removeCustomChecklistItem: (item: string) => void;
+    hideChecklistItem: (item: string) => void;
 
     connectStrava: (data: { accessToken: string; refreshToken: string; expiresAt: number; athleteId: number; athleteName: string; athleteAvatar: string }) => void;
     disconnectStrava: () => void;
@@ -106,6 +108,7 @@ export const useUserStore = create<UserState>()(
 
             raceChecklist: {},
             customChecklistItems: [],
+            hiddenChecklistItems: [],
             
             theme: 'dark',
 
@@ -154,12 +157,18 @@ export const useUserStore = create<UserState>()(
 
             clearChecklist: () => set({ raceChecklist: {} }),
 
-            addCustomChecklistItem: (item) => set((state) => ({
-                customChecklistItems: [...state.customChecklistItems, item]
-            })),
+            addCustomChecklistItem: (item) => set((state) => {
+                const current = state.customChecklistItems || [];
+                if (current.includes(item)) return state;
+                return { customChecklistItems: [...current, item] };
+            }),
 
             removeCustomChecklistItem: (item) => set((state) => ({
-                customChecklistItems: state.customChecklistItems.filter(i => i !== item)
+                customChecklistItems: (state.customChecklistItems || []).filter(i => i !== item)
+            })),
+
+            hideChecklistItem: (item) => set((state) => ({
+                hiddenChecklistItems: [...(state.hiddenChecklistItems || []), item]
             })),
 
             updatePersonalRecord: (distance, time) => set((state) => {
