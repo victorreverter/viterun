@@ -29,6 +29,11 @@ export interface UserState {
     customChecklistItems: string[];
     hiddenChecklistItems: string[];
 
+    // Weather Widget
+    weatherCity: string;
+    weatherLat: number | null;
+    weatherLon: number | null;
+
     // Theme
     theme: 'dark' | 'light';
 
@@ -68,7 +73,7 @@ export interface UserState {
     } | null;
 
     // ─── Actions ─────────────────────────────────────────────────
-    updateField: (field: keyof Omit<UserState, 'updateField' | 'triggerPaceHighlight' | 'toggleTheme' | 'updatePersonalRecord' | 'connectStrava' | 'disconnectStrava' | 'updateStravaStats' | 'setSyncedAt' | 'toggleChecklistItem' | 'clearChecklist' | 'addCustomChecklistItem' | 'removeCustomChecklistItem' | 'hideChecklistItem'>, value: number | string | boolean) => void;
+    updateField: (field: keyof Omit<UserState, 'updateField' | 'triggerPaceHighlight' | 'toggleTheme' | 'updatePersonalRecord' | 'connectStrava' | 'disconnectStrava' | 'updateStravaStats' | 'setSyncedAt' | 'toggleChecklistItem' | 'clearChecklist' | 'addCustomChecklistItem' | 'removeCustomChecklistItem' | 'hideChecklistItem' | 'setWeatherLocation'>, value: number | string | boolean) => void;
     updatePersonalRecord: (distance: keyof UserState['personalRecords'], time: string) => void;
     triggerPaceHighlight: () => void;
     toggleTheme: () => void;
@@ -77,6 +82,7 @@ export interface UserState {
     addCustomChecklistItem: (item: string) => void;
     removeCustomChecklistItem: (item: string) => void;
     hideChecklistItem: (item: string) => void;
+    setWeatherLocation: (city: string, lat: number | null, lon: number | null) => void;
 
     connectStrava: (data: { accessToken: string; refreshToken: string; expiresAt: number; athleteId: number; athleteName: string; athleteAvatar: string }) => void;
     disconnectStrava: () => void;
@@ -109,6 +115,10 @@ export const useUserStore = create<UserState>()(
             raceChecklist: {},
             customChecklistItems: [],
             hiddenChecklistItems: [],
+
+            weatherCity: '',
+            weatherLat: null,
+            weatherLon: null,
             
             theme: 'dark',
 
@@ -170,6 +180,12 @@ export const useUserStore = create<UserState>()(
             hideChecklistItem: (item) => set((state) => ({
                 hiddenChecklistItems: [...(state.hiddenChecklistItems || []), item]
             })),
+
+            setWeatherLocation: (city, lat, lon) => set({
+                weatherCity: city,
+                weatherLat: lat,
+                weatherLon: lon
+            }),
 
             updatePersonalRecord: (distance, time) => set((state) => {
                 const existing = state.personalRecords[distance];

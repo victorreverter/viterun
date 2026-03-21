@@ -9,6 +9,7 @@ import { NextRaceWidget } from "@/components/dashboard/NextRaceWidget";
 import { PersonalRecordsWidget } from "@/components/dashboard/PersonalRecordsWidget";
 import { ShoeMileageWidget } from "@/components/dashboard/ShoeMileageWidget";
 import { RaceDayChecklistWidget } from "@/components/dashboard/RaceDayChecklistWidget";
+import { WeatherWidget } from "@/components/dashboard/WeatherWidget";
 import { StravaWidget } from "@/components/dashboard/StravaWidget";
 import { useSearchStore } from "@/store/useSearchStore";
 import { useUserStore } from "@/store/useUserStore";
@@ -54,6 +55,7 @@ export default function Home() {
             </button>
         </div>
     )},
+    { name: "Live Weather Running Conditions Forecast Tracker", component: <div key="weather" className="col-span-1"><WeatherWidget /></div> },
     { name: "Strava Shoe Mileage Tracker Equipment", component: <ShoeMileageWidget key="shoes" /> },
     { name: "Race Day Checklist Gear", component: <div key="checklist" className="col-span-1 lg:col-span-2 md:col-span-2"><RaceDayChecklistWidget /></div> },
     { name: "Race Fueling Nutrition Planner Strategy", component: <div key="nutrition" className="col-span-1 lg:col-span-2 md:col-span-2"><RaceNutritionPlanner /></div> },
