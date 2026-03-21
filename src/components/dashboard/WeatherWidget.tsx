@@ -27,6 +27,8 @@ type WeatherData = {
         is_day: number;
     };
     daily: {
+        time: string[];
+        weather_code: number[];
         temperature_2m_max: number[];
         temperature_2m_min: number[];
     };
@@ -87,7 +89,7 @@ export function WeatherWidget() {
     const fetchWeather = async (lat: number, lon: number) => {
         setIsLoadingWeather(true);
         try {
-            const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,weather_code,wind_speed_10m&daily=temperature_2m_max,temperature_2m_min&timezone=auto`);
+            const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=auto&forecast_days=14`);
             const data = await res.json();
             setWeatherData(data);
         } catch (err) {
@@ -219,7 +221,7 @@ export function WeatherWidget() {
             </div>
 
             {/* Detailed Runner Stats Grid */}
-            <div className="grid grid-cols-3 gap-3 mt-auto relative z-10">
+            <div className="grid grid-cols-3 gap-3 relative z-10">
                 <div className="bg-brand-midnight/60 border border-brand-surface-light rounded-xl p-3 flex flex-col items-center text-center justify-center hover:border-brand-lime/30 transition-colors">
                     <Wind className="w-4 h-4 text-gray-400 mb-1.5" />
                     <span className="text-sm font-black text-foreground">{Math.round(current.wind_speed_10m)} <span className="text-[10px] font-bold text-gray-500">km/h</span></span>
@@ -234,6 +236,46 @@ export function WeatherWidget() {
                     <Thermometer className="w-4 h-4 text-orange-400 mb-1.5" />
                     <span className="text-sm font-black text-foreground">{Math.round(current.apparent_temperature)}<span className="text-[10px] font-bold text-gray-500">°</span></span>
                     <span className="text-[10px] font-bold uppercase tracking-wider text-gray-500 mt-0.5">Feels Like</span>
+                </div>
+            </div>
+
+            {/* 14-Day Forecast */}
+            <div className="mt-6 pt-5 border-t border-brand-surface-light relative z-10 w-full min-w-0">
+                <p className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-4 flex items-center justify-between">
+                    <span>14-Day Forecast</span>
+                    <span className="text-[9px] lowercase opacity-50">scroll &rarr;</span>
+                </p>
+                <div 
+                    className="flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory scroll-smooth touch-pan-x w-full"
+                    style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+                >
+                    <style>{`
+                        .w-full::-webkit-scrollbar {
+                            display: none;
+                        }
+                    `}</style>
+                    {daily.time.slice(1).map((date, index) => {
+                        const dateObj = new Date(date);
+                        const dayName = dateObj.toLocaleDateString(undefined, { weekday: 'short' });
+                        const i = index + 1; // offset by 1 because daily[0] is today
+                        const { Icon: DayIcon } = getWeatherDetails(daily.weather_code[i], 1);
+                        
+                        // Small temp hot/cold colors for forecast
+                        const isHotDay = daily.temperature_2m_max[i] > 25;
+                        const isColdDay = daily.temperature_2m_max[i] < 5;
+                        const iconColor = isHotDay ? 'text-orange-400' : isColdDay ? 'text-blue-400' : 'text-brand-lime';
+
+                        return (
+                            <div key={date} className="snap-start shrink-0 bg-brand-midnight/40 border border-brand-surface-light rounded-xl p-3 flex flex-col items-center min-w-[70px] hover:bg-brand-midnight/80 hover:border-brand-lime/30 transition-all cursor-grab active:cursor-grabbing">
+                                <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">{dayName}</span>
+                                <DayIcon className={`w-5 h-5 ${iconColor} mb-2 drop-shadow-sm`} />
+                                <div className="flex flex-col items-center">
+                                    <span className="text-sm font-black text-foreground">{Math.round(daily.temperature_2m_max[i])}°</span>
+                                    <span className="text-xs font-bold text-gray-500 mt-0.5">{Math.round(daily.temperature_2m_min[i])}°</span>
+                                </div>
+                            </div>
+                        );
+                    })}
                 </div>
             </div>
         </div>
