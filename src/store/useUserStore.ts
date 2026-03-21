@@ -58,6 +58,8 @@ export interface UserState {
         ytdDistance: number;       // meters
         recentRuns: number;
         recentDistance: number;    // meters
+        weeklyRuns: number;
+        weeklyDistance: number;    // meters
     } | null;
 
     // ─── Actions ─────────────────────────────────────────────────

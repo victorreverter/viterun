@@ -213,7 +213,7 @@ export function RaceNutritionPlanner() {
                         </h4>
                         <div className="grid grid-cols-2 gap-4">
                             <div>
-                                <p className="text-xs text-gray-500 mb-1">T-48hrs (Diet)</p>
+                                <p className="text-xs text-gray-500 mb-1">2 Days Before (Diet)</p>
                                 {needsCarbLoad ? (
                                     <p className="font-mono text-xl text-foreground font-black">
                                         {Math.round(carbLoadDaily)} <span className="text-sm font-sans font-medium text-gray-400">g/day carbs</span>
@@ -225,7 +225,7 @@ export function RaceNutritionPlanner() {
                                 )}
                             </div>
                             <div>
-                                <p className="text-xs text-gray-500 mb-1">T-3hrs (Breakfast)</p>
+                                <p className="text-xs text-gray-500 mb-1">3 Hours Before (Pre-race Meal)</p>
                                 <p className="font-mono text-xl text-foreground font-black">
                                     {Math.round(raceMorningCarbs)} <span className="text-sm font-sans font-medium text-gray-400">g</span>
                                 </p>
@@ -264,7 +264,7 @@ export function RaceNutritionPlanner() {
                                     <div className="flex gap-4 relative">
                                         <div className="w-3 h-3 rounded-full bg-brand-lime absolute left-0 top-1.5 shadow-[0_0_8px_#16A34A]"></div>
                                         <div className="pl-6">
-                                            <p className="text-sm font-bold text-foreground">T-15 mins before start</p>
+                                            <p className="text-sm font-bold text-foreground">15 mins before start</p>
                                             <p className="text-xs text-gray-400 mt-0.5">Take 1 gel ({gSize}g carbs) on start line</p>
                                         </div>
                                     </div>

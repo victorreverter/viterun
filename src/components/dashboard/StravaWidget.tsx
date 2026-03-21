@@ -13,7 +13,7 @@ import {
     fetchGear,
     type StravaTokenResponse,
 } from "@/lib/strava";
-import { RefreshCw, LogOut, Zap, MapPin, TrendingUp, Calendar } from "lucide-react";
+import { RefreshCw, LogOut, Zap, MapPin, TrendingUp, Calendar, Activity } from "lucide-react";
 
 // ─── Strava SVG Logo ─────────────────────────────────────────
 function StravaLogo({ size = 20 }: { size?: number }) {
@@ -114,6 +114,14 @@ export function StravaWidget() {
             const trueAllTimeMovingTime = runActivities.reduce((sum, current) => sum + (current.moving_time || 0), 0);
             const trueLongestRun = runActivities.reduce((max, current) => current.distance > max ? current.distance : max, 0);
 
+            // Calculate Last 7 Days manually
+            const now = new Date();
+            const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+            
+            const weeklyRunsFilter = runActivities.filter(a => new Date(a.start_date) >= sevenDaysAgo);
+            const weeklyRunsCount = weeklyRunsFilter.length;
+            const weeklyDistanceCount = weeklyRunsFilter.reduce((sum, current) => sum + current.distance, 0);
+
             updateStravaStats({
                 allTimeRuns: trueAllTimeRuns,
                 allTimeDistance: trueAllTimeDistance,
@@ -124,6 +132,8 @@ export function StravaWidget() {
                 ytdDistance: stats.ytd_run_totals.distance,
                 recentRuns: stats.recent_run_totals.count,
                 recentDistance: stats.recent_run_totals.distance,
+                weeklyRuns: weeklyRunsCount,
+                weeklyDistance: weeklyDistanceCount,
             });
 
             let updatedCount = 0;
@@ -253,15 +263,31 @@ export function StravaWidget() {
                 </div>
             )}
 
-            {/* 4-Week Summary */}
+            {/* 7-Day & 4-Week Summary */}
             {stravaStats && (
-                <div className="flex items-center gap-3 bg-brand-midnight/50 rounded-xl p-3 border border-brand-surface-light">
-                    <Calendar className="w-4 h-4 text-[#FC4C02] shrink-0" />
-                    <p className="text-xs text-gray-400">
-                        Last 4 weeks: <span className="text-foreground font-bold">{stravaStats.recentRuns} runs</span>
-                        {" · "}
-                        <span className="text-foreground font-bold">{metersToKm(stravaStats.recentDistance)} km</span>
-                    </p>
+                <div className="flex flex-col gap-2">
+                    <div className="flex items-center justify-between bg-brand-lime/10 rounded-xl p-3 border border-brand-lime/30 shadow-[inset_0_0_15px_rgba(204,255,0,0.05)]">
+                        <div className="flex items-center gap-2">
+                            <Activity className="w-4 h-4 text-brand-lime shrink-0" />
+                            <p className="text-xs text-brand-lime font-bold uppercase tracking-wider">Last 7 Days</p>
+                        </div>
+                        <p className="text-sm">
+                            <span className="text-foreground font-bold">{stravaStats.weeklyRuns ?? 0} runs</span>
+                            <span className="text-brand-lime/50 mx-1.5">•</span>
+                            <span className="text-brand-lime font-black">{metersToKm(stravaStats.weeklyDistance ?? 0)} km</span>
+                        </p>
+                    </div>
+                    <div className="flex items-center justify-between bg-brand-midnight/50 rounded-xl p-2.5 px-3 border border-brand-surface-light">
+                        <div className="flex items-center gap-2">
+                            <Calendar className="w-3.5 h-3.5 text-gray-400 shrink-0" />
+                            <p className="text-[10px] text-gray-500 font-semibold uppercase tracking-wider">Last 4 Weeks</p>
+                        </div>
+                        <p className="text-xs">
+                            <span className="text-gray-300 font-bold">{stravaStats.recentRuns} runs</span>
+                            <span className="text-gray-600 mx-1.5">•</span>
+                            <span className="text-gray-300 font-bold">{metersToKm(stravaStats.recentDistance)} km</span>
+                        </p>
+                    </div>
                 </div>
             )}
 
