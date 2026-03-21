@@ -27,11 +27,14 @@ export default function Home() {
     }, 300); // Small delay to let the scroll happen first
   };
 
-  const ALL_FEATURES = [
-    { name: "Next Race Tracker", component: <NextRaceWidget key="next" /> },
-    { name: "Personal Records PR", component: <PersonalRecordsWidget key="prs" /> },
-    { name: "Target Pace Goal", component: (
-        <div key="target-pace" className="bg-brand-surface border border-brand-surface-light hover:border-brand-lime/50 transition-colors rounded-2xl p-6 flex flex-col gap-4 shadow-lg shadow-black/20">
+  type Feature = { name: string; width: "1/3" | "2/3"; component: React.ReactNode };
+
+  const ALL_FEATURES: Feature[] = [
+    // 1/3 widgets
+    { name: "Next Race Tracker", width: "1/3", component: <div key="next" className="w-full"><NextRaceWidget /></div> },
+    { name: "Personal Records PR", width: "1/3", component: <div key="prs" className="w-full"><PersonalRecordsWidget /></div> },
+    { name: "Target Pace Goal", width: "1/3", component: (
+        <div key="target-pace" className="bg-brand-surface border border-brand-surface-light hover:border-brand-lime/50 transition-colors rounded-2xl p-6 flex flex-col gap-4 shadow-lg shadow-black/20 h-full w-full">
             <h3 className="text-brand-lime font-mono text-sm tracking-wider flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-purple-400 shadow-[0_0_8px_#c084fc]"></span>
               TARGET PACE
@@ -55,19 +58,24 @@ export default function Home() {
             </button>
         </div>
     )},
-    { name: "Live Weather Running Conditions Forecast Tracker", component: <div key="weather" className="col-span-1 lg:col-span-2 md:col-span-2"><WeatherWidget /></div> },
-    { name: "Strava Shoe Mileage Tracker Equipment", component: <ShoeMileageWidget key="shoes" /> },
-    { name: "Race Day Checklist Gear", component: <div key="checklist" className="col-span-1 lg:col-span-2 md:col-span-2"><RaceDayChecklistWidget /></div> },
-    { name: "Race Fueling Nutrition Planner Strategy", component: <div key="nutrition" className="col-span-1 lg:col-span-2 md:col-span-2"><RaceNutritionPlanner /></div> },
-    { name: "Race Predictor Calculator", component: <div key="race" className="col-span-1 lg:col-span-2 md:col-span-2"><RacePredictor /></div> },
-    { name: "HR Zones Generator Heart Rate", component: <div key="hr" className="col-span-1 lg:col-span-2"><HRZoneGenerator /></div> },
-    { name: "Pace Calculator Time Speed", component: <div key="pace" className="col-span-1"><PaceCalculator /></div> },
-    { name: "Body Fat Calculator Weight", component: <div key="fat" className="col-span-1"><BodyFatCalculator /></div> },
+    { name: "Strava Shoe Mileage Tracker Equipment", width: "1/3", component: <div key="shoes" className="w-full"><ShoeMileageWidget /></div> },
+    { name: "Race Day Checklist Gear", width: "1/3", component: <div key="checklist" className="w-full"><RaceDayChecklistWidget /></div> },
+    { name: "Pace Calculator Time Speed", width: "1/3", component: <div key="pace" className="w-full"><PaceCalculator /></div> },
+    { name: "Body Fat Calculator Weight", width: "1/3", component: <div key="fat" className="w-full"><BodyFatCalculator /></div> },
+
+    // 2/3 widgets
+    { name: "Live Weather Running Conditions Forecast Tracker", width: "2/3", component: <div key="weather" className="w-full"><WeatherWidget /></div> },
+    { name: "Race Fueling Nutrition Planner Strategy", width: "2/3", component: <div key="nutrition" className="w-full"><RaceNutritionPlanner /></div> },
+    { name: "Race Predictor Calculator", width: "2/3", component: <div key="race" className="w-full"><RacePredictor /></div> },
+    { name: "HR Zones Generator Heart Rate", width: "2/3", component: <div key="hr" className="w-full"><HRZoneGenerator /></div> },
   ];
 
   const filteredFeatures = ALL_FEATURES.filter(feat => 
     feat.name.toLowerCase().includes(query.toLowerCase())
   );
+
+  const filtered1Third = filteredFeatures.filter(f => f.width === "1/3");
+  const filtered2Third = filteredFeatures.filter(f => f.width === "2/3");
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
@@ -87,8 +95,20 @@ export default function Home() {
             <p className="text-gray-500 mt-2 max-w-md">We couldn&apos;t find any features matching &quot;{query}&quot;. Try searching for something else like &quot;Pace&quot;, &quot;Shoes&quot;, or &quot;PR&quot;.</p>
           </div>
       ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
-             {filteredFeatures.map(feat => feat.component)}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+             {/* 1/3 Width Column Stack */}
+             {filtered1Third.length > 0 && (
+                 <div className="col-span-1 flex flex-col gap-6 w-full">
+                     {filtered1Third.map(feat => feat.component)}
+                 </div>
+             )}
+             
+             {/* 2/3 Width Column Stack */}
+             {filtered2Third.length > 0 && (
+                 <div className="col-span-1 lg:col-span-2 flex flex-col gap-6 w-full">
+                     {filtered2Third.map(feat => feat.component)}
+                 </div>
+             )}
           </div>
       )}
     </div>
