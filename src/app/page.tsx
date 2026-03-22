@@ -10,6 +10,7 @@ import { PersonalRecordsWidget } from "@/components/dashboard/PersonalRecordsWid
 import { ShoeMileageWidget } from "@/components/dashboard/ShoeMileageWidget";
 import { RaceDayChecklistWidget } from "@/components/dashboard/RaceDayChecklistWidget";
 import { WeatherWidget } from "@/components/dashboard/WeatherWidget";
+import { IntervalWorkoutGenerator } from "@/components/calculators/IntervalWorkoutGenerator";
 import { StravaWidget } from "@/components/dashboard/StravaWidget";
 import { useSearchStore } from "@/store/useSearchStore";
 import { useUserStore } from "@/store/useUserStore";
@@ -65,6 +66,7 @@ export default function Home() {
 
     // 2/3 widgets
     { name: "Live Weather Running Conditions Forecast Tracker", width: "2/3", component: <div key="weather" className="w-full"><WeatherWidget /></div> },
+    { name: "Interval Workout Generator Track Speeds", width: "2/3", component: <div key="intervals" className="w-full"><IntervalWorkoutGenerator /></div> },
     { name: "Race Fueling Nutrition Planner Strategy", width: "2/3", component: <div key="nutrition" className="w-full"><RaceNutritionPlanner /></div> },
     { name: "Race Predictor Calculator", width: "2/3", component: <div key="race" className="w-full"><RacePredictor /></div> },
     { name: "HR Zones Generator Heart Rate", width: "2/3", component: <div key="hr" className="w-full"><HRZoneGenerator /></div> },
