@@ -16,13 +16,13 @@ export function TrainingLoadWidget() {
                     </div>
                     <div>
                         <h2 className="text-lg font-bold tracking-tight text-foreground leading-tight">Training Load</h2>
-                        <p className="text-xs text-gray-500 font-medium">Injury Predictor (ACWR)</p>
+                        <p className="text-xs text-gray-500 font-medium">Injury Predictor</p>
                     </div>
                 </div>
                 <div className="flex-1 flex flex-col items-center justify-center text-center py-6">
                     <Activity className="w-8 h-8 text-gray-600 mb-3" />
                     <p className="text-sm font-bold text-gray-400">Connect Strava</p>
-                    <p className="text-xs text-gray-500 mt-1 max-w-[200px]">Sync your activities to automatically unlock your Acute-to-Chronic Workload Ratio.</p>
+                    <p className="text-xs text-gray-500 mt-1 max-w-[200px]">Sync your activities to automatically unlock your Acute:Chronic Workload Ratio.</p>
                 </div>
             </div>
         );
@@ -69,7 +69,7 @@ export function TrainingLoadWidget() {
                 </div>
                 <div>
                     <h2 className="text-lg font-bold tracking-tight text-foreground leading-tight">Training Load</h2>
-                    <p className="text-xs text-gray-500 font-medium tracking-wide">ACWR INJURY PREDICTOR</p>
+                    <p className="text-[10px] text-gray-500 font-bold tracking-wider uppercase mt-0.5">ACUTE:CHRONIC WORKLOAD RATIO</p>
                 </div>
             </div>
 
