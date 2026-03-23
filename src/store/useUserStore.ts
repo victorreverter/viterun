@@ -58,6 +58,7 @@ export interface UserState {
     stravaAthleteAvatar: string;
     stravaSyncedAt: string; // ISO date string, empty if never synced
     stravaShoes: { id: string; name: string; distance: number; primary: boolean }[] | null;
+    shoeCategories: Record<string, "daily" | "speed" | "race" | "trail">;
     stravaStats: {
         allTimeRuns: number;
         allTimeDistance: number;   // meters
@@ -88,6 +89,7 @@ export interface UserState {
     disconnectStrava: () => void;
     updateStravaStats: (stats: NonNullable<UserState['stravaStats']>) => void;
     updateStravaShoes: (shoes: NonNullable<UserState['stravaShoes']>) => void;
+    setShoeCategory: (shoeId: string, category: "daily" | "speed" | "race" | "trail") => void;
     setSyncedAt: () => void;
 }
 
@@ -142,6 +144,7 @@ export const useUserStore = create<UserState>()(
             stravaAthleteAvatar: '',
             stravaSyncedAt: '',
             stravaShoes: null,
+            shoeCategories: {},
             stravaStats: null,
 
             // ─── Actions ────────────────────────────────────────────
@@ -244,6 +247,10 @@ export const useUserStore = create<UserState>()(
 
             updateStravaStats: (stats) => set({ stravaStats: stats }),
             updateStravaShoes: (shoes) => set({ stravaShoes: shoes }),
+
+            setShoeCategory: (shoeId, category) => set((state) => ({
+                shoeCategories: { ...state.shoeCategories, [shoeId]: category }
+            })),
 
             setSyncedAt: () => set({ stravaSyncedAt: new Date().toISOString() }),
         }),
