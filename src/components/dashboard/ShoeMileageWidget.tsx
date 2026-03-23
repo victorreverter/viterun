@@ -1,7 +1,7 @@
 "use client";
 
 import { useUserStore } from "@/store/useUserStore";
-import { Info, Footprints, Zap, Flame, Mountain, ActivitySquare } from "lucide-react";
+import { Info, Footprints, Zap, Flame, Mountain, ActivitySquare, AlertTriangle, Lightbulb, CheckCircle2 } from "lucide-react";
 
 type CategoryType = "daily" | "speed" | "race" | "trail";
 
@@ -21,13 +21,49 @@ export function ShoeMileageWidget() {
 
     return (
         <div className="bg-brand-surface border border-brand-surface-light hover:border-brand-lime/50 transition-colors rounded-2xl p-6 flex flex-col gap-4 shadow-lg shadow-black/20 group h-full">
-            <h3 className="text-brand-lime font-mono text-sm tracking-wider flex items-center justify-between">
+            <h3 className="text-brand-lime font-mono text-sm tracking-wider flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_8px_#3b82f6]"></span>
                     SHOE ROTATION
                 </div>
                 <ActivitySquare className="w-4 h-4 text-gray-500 opacity-50 group-hover:opacity-100 transition-opacity" />
             </h3>
+
+            {stravaShoes && stravaShoes.length > 0 && (
+                <div className="bg-brand-midnight/60 border border-brand-surface-light rounded-xl p-3 mb-2 flex flex-col gap-2">
+                    <div className="flex items-center justify-between border-b border-brand-surface-light/50 pb-2">
+                        <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Active Quiver</span>
+                        <span className="text-xs font-black text-foreground">{stravaShoes.length} Shoes</span>
+                    </div>
+                    {(() => {
+                        const dailyCount = stravaShoes.filter(s => (shoeCategories?.[s.id] || "daily") === "daily").length;
+                        const speedCount = stravaShoes.filter(s => (shoeCategories?.[s.id] || "daily") === "speed").length;
+                        const raceCount = stravaShoes.filter(s => (shoeCategories?.[s.id] || "daily") === "race").length;
+                        
+                        let insight = { color: "text-brand-lime", bg: "bg-brand-lime/10", border: "border-brand-lime/30", icon: CheckCircle2, title: "ROTATION OPTIMIZED", msg: "Quiver is perfectly balanced. PEBAX/EVA foam is actively decompressing between sessions." };
+                        
+                        if (dailyCount === 0) {
+                            insight = { color: "text-red-400", bg: "bg-red-400/10", border: "border-red-400/30", icon: AlertTriangle, title: "CRITICAL ALERT", msg: "You have no Daily Trainer. Running easy miles in carbon or speed shoes severely degrades biomechanical efficiency and destroys expensive outsoles." };
+                        } else if (dailyCount === 1) {
+                            insight = { color: "text-orange-400", bg: "bg-orange-400/10", border: "border-orange-400/30", icon: AlertTriangle, title: "FOAM WARNING", msg: "Only 1 Daily Trainer. EVA foam takes 24-48hrs to fully decompress. Running in the same shoe daily reduces midsole lifespan by ~30% and spikes injury risk." };
+                        } else if (speedCount === 0) {
+                            insight = { color: "text-blue-400", bg: "bg-blue-400/10", border: "border-blue-400/30", icon: Lightbulb, title: "OPTIMIZATION", msg: "Consider adding a Speed/Tempo shoe. Heavy daily trainers reduce turnover efficiency and running economy during track intervals." };
+                        } else if (raceCount === 0) {
+                            insight = { color: "text-blue-400", bg: "bg-blue-400/10", border: "border-blue-400/30", icon: Lightbulb, title: "RACE READY", msg: "Solid training foundation. Consider investing in a carbon-plated shoe if you are hunting a new PR." };
+                        }
+
+                        return (
+                            <div className={`p-2.5 rounded-lg border ${insight.bg} ${insight.border} flex items-start gap-2.5`}>
+                                <insight.icon className={`w-4 h-4 mt-0.5 shrink-0 ${insight.color}`} />
+                                <div className="flex flex-col gap-0.5">
+                                    <span className={`text-[10px] font-black uppercase tracking-wider ${insight.color}`}>{insight.title}</span>
+                                    <p className="text-[10px] text-gray-300 leading-relaxed font-medium">{insight.msg}</p>
+                                </div>
+                            </div>
+                        );
+                    })()}
+                </div>
+            )}
 
             {!stravaShoes || stravaShoes.length === 0 ? (
                 <div className="flex-1 flex flex-col items-center justify-center py-6 text-center">
