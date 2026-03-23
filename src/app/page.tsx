@@ -11,6 +11,7 @@ import { ShoeMileageWidget } from "@/components/dashboard/ShoeMileageWidget";
 import { RaceDayChecklistWidget } from "@/components/dashboard/RaceDayChecklistWidget";
 import { WeatherWidget } from "@/components/dashboard/WeatherWidget";
 import { IntervalWorkoutGenerator } from "@/components/calculators/IntervalWorkoutGenerator";
+import { TrainingLoadWidget } from "@/components/dashboard/TrainingLoadWidget";
 import { StravaWidget } from "@/components/dashboard/StravaWidget";
 import { useSearchStore } from "@/store/useSearchStore";
 import { useUserStore } from "@/store/useUserStore";
@@ -60,6 +61,7 @@ export default function Home() {
         </div>
     )},
     { name: "Strava Shoe Mileage Tracker Equipment", width: "1/3", component: <div key="shoes" className="w-full"><ShoeMileageWidget /></div> },
+    { name: "Training Load ACWR Injury Predictor Tracker", width: "1/3", component: <div key="acwr" className="w-full"><TrainingLoadWidget /></div> },
     { name: "Race Day Checklist Gear", width: "1/3", component: <div key="checklist" className="w-full"><RaceDayChecklistWidget /></div> },
     { name: "Pace Calculator Time Speed", width: "1/3", component: <div key="pace" className="w-full"><PaceCalculator /></div> },
     { name: "Body Fat Calculator Weight", width: "1/3", component: <div key="fat" className="w-full"><BodyFatCalculator /></div> },
